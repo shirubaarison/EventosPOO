@@ -52,6 +52,7 @@ public abstract class Usuario {
         return eventosInscritos;
     }
 
+    // Por enquanto ta como string, mas logo vai ser uma classe
     public void inscreverNoEvento(String evento) {
         this.eventosInscritos.add(evento);
     }

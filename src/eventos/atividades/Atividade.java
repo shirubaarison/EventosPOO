@@ -1,18 +1,67 @@
 package eventos.atividades;
 
+import eventos.Avaliacao;
+import eventos.pessoas.Autor;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Atividade {
-    String nome;
-    TipoAtividade tipo;
+    private int id;
+    private String titulo;
+    private TipoAtividade tipo;
 
-    LocalDate horario = LocalDate.now();
-    List<String> feedbacks = new ArrayList<>();
+    private final LocalDate horario = LocalDate.now();
+    private Autor autor;
+    private List<Avaliacao> avaliacoes;
 
-    boolean concluido = false;
-    boolean cancelado = false;
+    private boolean concluido = false;
+    private boolean cancelado = false;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        if (id > 0) {
+            this.id = id;
+        }
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        if (titulo != null) {
+            this.titulo = titulo;
+        }
+    }
+
+    public TipoAtividade getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoAtividade tipo) {
+        if (tipo != null) {
+            this.tipo = tipo;
+        }
+    }
+
+    public Autor getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Autor autor) {
+        this.autor = autor;
+    }
+
+    public void adicionarAvaliacao(Avaliacao av) {
+        if (av != null) {
+            this.avaliacoes.add(av);
+        }
+    }
 
     public void cancelarAtividade(){
         this.cancelado = true;
@@ -26,17 +75,16 @@ public class Atividade {
         return horario;
     }
 
-    public List<String> getFeedbacks() {
-        return feedbacks;
+    public List<Avaliacao> getAvaliacoes() {
+        return avaliacoes;
     }
-
 
     public String getInformacoes() {
         return "Atividade{" +
-                "nome='" + nome + '\'' +
+                "titulo='" + titulo + '\'' +
                 ", tipo=" + tipo +
                 ", horario=" + horario +
-                ", feedbacks=" + feedbacks +
+                ", avaliacoes=" + avaliacoes +
                 ", concluido=" + concluido +
                 ", cancelado=" + cancelado +
                 '}';

@@ -1,5 +1,7 @@
 package eventos.pessoas;
 
+import eventos.Evento;
+
 import java.util.List;
 
 public abstract class Usuario {
@@ -7,7 +9,7 @@ public abstract class Usuario {
     private String cpf;
     private String instituicao;
     private String email;
-    private List<String> eventosInscritos;
+    private List<Evento> eventosInscritos;
 
     Usuario(String nome, String cpf, String instituicao, String email) {
         this.nome = nome;
@@ -21,7 +23,9 @@ public abstract class Usuario {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        if (nome != null) {
+            this.nome = nome;
+        }
     }
 
     public String getCpf() {
@@ -29,7 +33,9 @@ public abstract class Usuario {
     }
 
     public void setCpf(String cpf) {
-        this.cpf = cpf;
+        if (cpf != null) {
+            this.cpf = cpf;
+        }
     }
 
     public String getInstituicao() {
@@ -37,7 +43,9 @@ public abstract class Usuario {
     }
 
     public void setInstituicao(String instituicao) {
-        this.instituicao = instituicao;
+        if (instituicao != null) {
+            this.instituicao = instituicao;
+        }
     }
 
     public String getEmail() {
@@ -45,19 +53,21 @@ public abstract class Usuario {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (email != null) {
+            this.email = email;
+        }
     }
 
-    public List<String> getEventosInscritos() {
+    public List<Evento> getEventosInscritos() {
         return eventosInscritos;
     }
 
     // Por enquanto ta como string, mas logo vai ser uma classe
-    public void inscreverNoEvento(String evento) {
+    public void inscreverNoEvento(Evento evento) {
         this.eventosInscritos.add(evento);
     }
 
-    public void cancelarInscricao(String evento) {
+    public void cancelarInscricao(Evento evento) {
         this.eventosInscritos.remove(evento);
     }
 }

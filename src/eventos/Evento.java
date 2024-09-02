@@ -8,9 +8,9 @@ public class Evento {
     private String descricao;
     private Date data;
     private String hora;
-    private String localizacao;
+    private Local localizacao;
 
-    public Evento(int id, String nome, String descricao, Date data, String hora, String localizacao) {
+    public Evento(int id, String nome, String descricao, Date data, String hora, Local localizacao) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
@@ -59,11 +59,13 @@ public class Evento {
         this.hora = hora;
     }
 
-    public String getLocalizacao() {
+    public Local getLocalizacao() {
         return localizacao;
     }
 
-    public void setLocalizacao(String localizacao) {
-        this.localizacao = localizacao;
+    public void setLocalizacao(Local localizacao) {
+        if (localizacao != null) {
+            this.localizacao = localizacao;
+        }
     }
 }

@@ -1,15 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="669.0" prefWidth="1253.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grupog.eventospoo.controller.HomeController">
+<AnchorPane prefHeight="669.0" prefWidth="1253.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grupog.eventospoo.controller.DashboardController">
    <children>
-      <Text layoutX="362.0" layoutY="349.0" strokeType="OUTSIDE" strokeWidth="0.0" text="bem vindo" wrappingWidth="528.21875">
+      <Text fx:id="boasVindas" layoutX="40.0" layoutY="77.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bem vindo" wrappingWidth="910.0">
          <font>
-            <Font size="96.0" />
+            <Font size="29.0" />
          </font>
       </Text>
+      <MenuBar layoutY="1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="27.0" prefWidth="1253.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Conta" >
+            <items>
+               <MenuItem mnemonicParsing="false" text="Alterar nome" />
+               <MenuItem mnemonicParsing="false" text="Alterar senha" />
+               <MenuItem mnemonicParsing="false" text="Sair" onAction="#handleLogout" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <TabPane layoutX="40.0" layoutY="110.0" prefHeight="519.0" prefWidth="910.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Eventos">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="488.0" prefWidth="911.0">
+                     <children>
+                        <AnchorPane layoutX="-3.0" layoutY="6.0" prefHeight="458.0" prefWidth="916.0">
+                           <children>
+                              <HBox layoutX="16.0" layoutY="63.0" prefHeight="142.0" prefWidth="884.0">
+                                 <children>
+                                    <VBox fx:id="eventosCard" prefHeight="181.0" prefWidth="200.0">
+                                       <Label fx:id="eventNameLabel1" style="-fx-padding:10;" text="Event Name" />
+                                       <Label fx:id="eventLocalizationLabel1" style="-fx-padding:10;" text="Localization" />
+                                       <Label fx:id="eventTimeLabel1" style="-fx-padding:10;" text="Time" />
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Text layoutX="16.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descubra eventos">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Text>
+                              <Text layoutX="14.0" layoutY="259.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Eventos inscritos">
+                                 <font>
+                                    <Font size="20.0" />
+                                 </font>
+                              </Text>
+                              <HBox layoutX="16.0" layoutY="276.0" prefHeight="142.0" prefWidth="884.0">
+                                 <children>
+                                    <VBox fx:id="eventosInscritosCard" prefHeight="181.0" prefWidth="200.0">
+                                       <Label fx:id="eventNameLabel2" style="-fx-padding:10;" text="Event Name" />
+                                       <Label fx:id="eventLocalizationLabel2" style="-fx-padding:10;" text="Localization" />
+                                       <Label fx:id="eventTimeLabel2" style="-fx-padding:10;" text="Time" />
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Avaliaçoes">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+      <TitledPane animated="false" layoutX="974.0" layoutY="110.0" prefHeight="458.0" prefWidth="262.0" text="Chat">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <VBox prefHeight="434.0" prefWidth="262.0">
+                     <children>
+                        <VBox fx:id="usersVBox" prefHeight="45.0" prefWidth="262.0">
+                        </VBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </content>
+      </TitledPane>
    </children>
 </AnchorPane>

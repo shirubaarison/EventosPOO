@@ -27,7 +27,6 @@ public class LoginController {
         String senhaValue = senha.getText().trim();
 
         if (systemModel.login(nome, senhaValue)) {
-
             // Fechar essa janela
             Stage stage = (Stage) nomeUsuario.getScene().getWindow();
             stage.close();

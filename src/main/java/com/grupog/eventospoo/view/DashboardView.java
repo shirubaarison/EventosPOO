@@ -6,21 +6,20 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DashboardView {
-    private final Stage stage;
+    private Scene scene;
 
-    public DashboardView(Stage stage) {
-        this.stage = stage;
-    }
-
-    public void show() throws IOException {
+    public DashboardView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/DashboardView.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Dashboard");
-        stage.show();
+        scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

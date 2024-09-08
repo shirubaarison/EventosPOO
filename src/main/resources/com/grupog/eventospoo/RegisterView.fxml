@@ -8,11 +8,12 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="614.0" prefWidth="1082.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grupog.eventospoo.controller.RegisterController">
     <children>
-        <VBox alignment="CENTER_LEFT" layoutX="47.0" layoutY="212.0" prefHeight="230.0" prefWidth="221.0" spacing="10.0">
+        <VBox alignment="CENTER_LEFT" layoutX="47.0" layoutY="137.0" prefHeight="362.0" prefWidth="221.0" spacing="10.0">
             <children>
             <Text id="email" strokeType="OUTSIDE" strokeWidth="0.0" text="Email" />
             <TextField fx:id="email" promptText="Email" />
@@ -22,7 +23,10 @@
                 <PasswordField fx:id="senha" prefHeight="24.0" prefWidth="171.0" promptText="Senha" />
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CPF" />
                 <TextField fx:id="cpf" prefWidth="221.0" promptText="CPF" />
-            <ComboBox fx:id="tipoUsuario" prefHeight="24.0" prefWidth="226.0" promptText="Tipo" />
+            <Text id="email" strokeType="OUTSIDE" strokeWidth="0.0" text="Instituiçao" />
+            <TextField fx:id="instituicao" promptText="Instituição" />
+            <Text id="email" strokeType="OUTSIDE" strokeWidth="0.0" text="Tipo de usuário" />
+            <ComboBox fx:id="tipoUsuario" prefHeight="24.0" prefWidth="226.0" />
             </children>
         </VBox>
         <ImageView fitHeight="637.0" fitWidth="772.0" layoutX="347.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
@@ -30,7 +34,10 @@
                 <Image url="@../../../images/file.jpg" />
             </image>
         </ImageView>
-        <Button layoutX="187.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleRegistration" prefHeight="24.0" prefWidth="81.0" text="Registrar" />
-        <Text layoutX="47.0" layoutY="166.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrar" wrappingWidth="127.29931640625" />
+        <Button layoutX="179.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleRegistration" prefHeight="33.0" prefWidth="89.0" text="Registrar" />
+        <Text layoutX="47.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrar" wrappingWidth="221.0">
+         <font>
+            <Font size="26.0" />
+         </font></Text>
     </children>
 </AnchorPane>

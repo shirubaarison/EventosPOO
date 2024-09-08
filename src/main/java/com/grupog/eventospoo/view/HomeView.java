@@ -9,10 +9,10 @@ import java.io.IOException;
 import java.util.Objects;
 
 
-public class BemVindoView {
+public class HomeView {
 
-    public BemVindoView(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/BemVindoView.fxml"));
+    public HomeView(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/HomeView.fxml"));
         Parent root = loader.load();
 
         Scene bemVindoScene = new Scene(root);

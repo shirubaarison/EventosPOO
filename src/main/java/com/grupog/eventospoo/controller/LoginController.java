@@ -4,8 +4,9 @@ import com.grupog.eventospoo.model.SystemModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
-import static com.grupog.eventospoo.utils.PasswordUtils.showAlert;
+import static com.grupog.eventospoo.utils.AlertUtils.showAlert;
 
 public class LoginController {
     private SystemModel systemModel;
@@ -26,9 +27,16 @@ public class LoginController {
         String senhaValue = senha.getText().trim();
 
         if (systemModel.login(nome, senhaValue)) {
-            System.out.println("Login Successful!");
+
+            // Fechar essa janela
+            Stage stage = (Stage) nomeUsuario.getScene().getWindow();
+            stage.close();
+
+            nomeUsuario.clear();
+            senha.clear();
         } else {
             showAlert("Usuário e/ou senha incorreto(s)");
         }
+
     }
 }

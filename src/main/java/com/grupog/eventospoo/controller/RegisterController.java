@@ -3,13 +3,12 @@ package com.grupog.eventospoo.controller;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.TipoUsuario;
 import com.grupog.eventospoo.model.Usuario;
-import com.grupog.eventospoo.model.Visitante;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import static com.grupog.eventospoo.utils.AlertUtils.showAlert;
 import static com.grupog.eventospoo.utils.PasswordUtils.hashPassword;
-import static com.grupog.eventospoo.utils.PasswordUtils.showAlert;
 
 public class RegisterController {
     private SystemModel systemModel;
@@ -27,6 +26,9 @@ public class RegisterController {
     private TextField cpf;
 
     @FXML
+    private TextField instituicao;
+
+    @FXML
     private ComboBox<TipoUsuario> tipoUsuario;
 
     @FXML
@@ -42,9 +44,10 @@ public class RegisterController {
         String nome = nomeUsuario.getText().trim();
         String senhaValue = senha.getText().trim();
         String cpfValue = cpf.getText().trim();
+        String instituicaoValue = instituicao.getText().trim();
         TipoUsuario tipo = tipoUsuario.getValue();
 
-        if (emailValue.isEmpty() || nome.isEmpty() || senhaValue.isEmpty() || cpfValue.isEmpty() || tipo == null) {
+        if (emailValue.isEmpty() || nome.isEmpty() || instituicaoValue.isEmpty() || senhaValue.isEmpty() || cpfValue.isEmpty() || tipo == null) {
             showAlert("Há campos sem dados");
             return;
         }
@@ -54,20 +57,20 @@ public class RegisterController {
             return;
         }
 
+        if (!isValidEmail(emailValue)) {
+            showAlert("Email inválido");
+        }
+
         // Dar hash na senha, não vamos salvar ela plana né...
         String hashedPassword = hashPassword(senhaValue);
 
         // Criar e adicionar o novo usuário ao sistema
-        Usuario novoUsuario = new Usuario(nome, cpfValue, hashedPassword , emailValue);
+        Usuario novoUsuario = new Usuario(nome, cpfValue, instituicaoValue, hashedPassword , emailValue);
         systemModel.addUsuario(novoUsuario);
 
-        closeModal();
-
-        System.out.println("Registration Successful!");
-        System.out.println("Nome: " + nome);
-        System.out.println("Senha: " + hashedPassword);
-        System.out.println("CPF: " + cpfValue);
-        System.out.println("Tipo de Usuário: " + tipo);
+        // Fechar essa janela e limpar
+        Stage stage = (Stage) nomeUsuario.getScene().getWindow();
+        stage.close();
 
         email.clear();
         nomeUsuario.clear();
@@ -81,9 +84,8 @@ public class RegisterController {
         return true;
     }
 
-    // fechar janela após registrar
-    private void closeModal() {
-        Stage stage = (Stage) nomeUsuario.getScene().getWindow();
-        stage.close();
+    private boolean isValidEmail(String email) {
+        // implementar lógica
+        return true;
     }
 }

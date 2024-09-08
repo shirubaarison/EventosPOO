@@ -1,5 +1,5 @@
         package com.grupog.eventospoo;
-        import com.grupog.eventospoo.view.BemVindoView;
+        import com.grupog.eventospoo.view.HomeView;
         import javafx.application.Application;
         import javafx.stage.Stage;
 
@@ -9,7 +9,7 @@
 
             @Override
             public void start(Stage stage) throws IOException {
-                new BemVindoView(stage);
+                new HomeView(stage);
             }
 
             public static void main(String[] args) {

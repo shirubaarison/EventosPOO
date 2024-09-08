@@ -10,9 +10,10 @@ public class Usuario {
     private String senha;
     private List<Evento> eventosInscritos;
 
-    public Usuario(String nome, String cpf, String senha, String email) {
+    public Usuario(String nome, String cpf, String instituicao, String senha, String email) {
         this.nome = nome;
         this.cpf = cpf;
+        this.instituicao = instituicao;
         this.senha = senha;
         this.email = email;
     }

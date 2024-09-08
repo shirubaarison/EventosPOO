@@ -1,10 +1,7 @@
 package com.grupog.eventospoo.utils;
 
-import javafx.scene.control.Alert;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 public class PasswordUtils {
 
@@ -14,11 +11,12 @@ public class PasswordUtils {
         }
 
         try {
+            // Hash feito com SHA-256, não deve ser tão seguro, mas é o que iremos utilizar nesse projeto
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
 
-            byte[] hashedBytes = digest.digest(password.getBytes());
+            digest.update(password.getBytes());
 
-            return Base64.getEncoder().encodeToString(hashedBytes);
+            return new String(digest.digest());
 
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error ao dar hashing na senha", e);
@@ -27,20 +25,7 @@ public class PasswordUtils {
 
     public static boolean verificarSenha(String rawPassword, String storedHash) {
         String hashedPassword = hashPassword(rawPassword);
-        System.out.println("Are they equal??");
-
-        System.out.println(hashedPassword);
-        System.out.println(storedHash);
 
         return hashedPassword.equals(storedHash);
-    }
-
-    // Metodo para caso dê algum erro
-    public static void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

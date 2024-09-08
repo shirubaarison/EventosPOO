@@ -14,7 +14,10 @@ public class SystemModel {
     private final ObjectProperty<Usuario> usuarioLogado = new SimpleObjectProperty<>();
 
     public SystemModel() {
-        // Inicializar com usuários talvez...
+        // Inicializar com alguns usuários...
+        addUsuario(new Usuario("amostradinho", "123.123.123-43", "UFC", PasswordUtils.hashPassword("123"), "amostradinho@gmail.com"));
+        addUsuario(new Usuario("caska de bala", "113.123.123-43", "UFBA", PasswordUtils.hashPassword("22"), "caska@gmail.com"));
+        addUsuario(new Usuario("borabill", "123.123.123-43", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com"));
     }
 
     public static SystemModel getInstance() {
@@ -31,10 +34,8 @@ public class SystemModel {
     public void addUsuario(Usuario user) {
         if (user != null) {
             this.usuarios.put(user.getNome(), user);
-            System.out.println("Usuario adicionado: " + user.getNome());
-            System.out.println("Usuarios no sistema: " + usuarios);
         } else {
-            System.out.println("Tentativa de adicionar usuario nulo.");
+            throw new IllegalArgumentException("Tentativa de adicionar usuário nulo");
         }
     }
 

@@ -15,9 +15,9 @@
       <VBox alignment="CENTER_LEFT" layoutX="47.0" layoutY="212.0" prefHeight="190.0" prefWidth="221.0" spacing="10.0">
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Usuário" />
-            <TextField promptText="Usuario" />
+            <TextField fx:id="nomeUsuario" promptText="Usuario" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Senha" />
-            <PasswordField prefHeight="24.0" prefWidth="171.0" promptText="Senha" />
+            <PasswordField fx:id="senha" prefHeight="24.0" prefWidth="171.0" promptText="Senha" />
          </children>
       </VBox>
       <ImageView fitHeight="637.0" fitWidth="772.0" layoutX="347.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true">
@@ -25,7 +25,7 @@
             <Image url="@../../../images/file.jpg" />
          </image>
       </ImageView>
-      <Button layoutX="187.0" layoutY="402.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="81.0" text="Logar" />
+      <Button onAction="#handleLogin" layoutX="187.0" layoutY="402.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="81.0" text="Logar" />
       <Text layoutX="47.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login" wrappingWidth="127.29931640625" />
    </children>
 </AnchorPane>

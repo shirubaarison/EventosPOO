@@ -2,17 +2,18 @@ package com.grupog.eventospoo.model;
 
 import java.util.List;
 
-public abstract class Usuario {
+public class Usuario {
     private String nome;
     private String cpf;
     private String instituicao;
     private String email;
+    private String senha;
     private List<Evento> eventosInscritos;
 
-    Usuario(String nome, String cpf, String instituicao, String email) {
+    public Usuario(String nome, String cpf, String senha, String email) {
         this.nome = nome;
         this.cpf = cpf;
-        this.instituicao = instituicao;
+        this.senha = senha;
         this.email = email;
     }
 
@@ -67,5 +68,13 @@ public abstract class Usuario {
 
     public void cancelarInscricao(Evento evento) {
         this.eventosInscritos.remove(evento);
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 }

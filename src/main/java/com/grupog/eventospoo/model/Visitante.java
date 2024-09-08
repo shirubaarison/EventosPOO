@@ -4,7 +4,7 @@ public class Visitante extends Usuario {
     int id;
     String feedback;
 
-    Visitante(String nome, String cpf, String instituicao, String email) {
+    public Visitante(String nome, String cpf, String instituicao, String email) {
         super(nome, cpf, instituicao, email);
     }
 

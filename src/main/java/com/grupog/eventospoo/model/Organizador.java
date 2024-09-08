@@ -2,7 +2,7 @@ package com.grupog.eventospoo.model;
 
 public class Organizador extends Usuario {
     Organizador(String nome, String cpf, String instituicao, String senha, String email) {
-        super(nome, cpf, instituicao, senha, email);
+        super(nome, cpf, instituicao, senha, email, TipoUsuario.ORGANIZADOR);
     }
 
     public void concluirAtividade(Atividade atividade) {

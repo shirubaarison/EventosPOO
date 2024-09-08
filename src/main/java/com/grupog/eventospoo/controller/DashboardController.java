@@ -5,6 +5,7 @@ import com.grupog.eventospoo.model.Usuario;
 import com.grupog.eventospoo.view.HomeView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -13,6 +14,9 @@ import java.io.IOException;
 import java.util.Map;
 
 public class DashboardController {
+
+    @FXML
+    private Menu tipoUsuario;
 
     @FXML
     private VBox usersVBox;
@@ -47,8 +51,40 @@ public class DashboardController {
     public void initialize() {
         systemModel = SystemModel.getInstance();
         boasVindas.setText("Boas vindas " + systemModel.getUsuarioLogado().getNome() + "!");
+        tipoUsuario.setText(systemModel.getUsuarioLogado().getTipoUsuario().toString());
+
+        Usuario usuarioConectado = systemModel.getUsuarioLogado();
 
         carregarUsuarios();
+        inicializarPorUsuario(usuarioConectado);
+    }
+
+    public void inicializarPorUsuario(Usuario usuario) {
+        switch (usuario.getTipoUsuario()) {
+            case VISITANTE:
+                setupForVisitante();
+                break;
+            case ORGANIZADOR:
+                setupForOrganizador();
+                break;
+            case AUTOR:
+                setupForAutor();
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown user type: " + usuario.getTipoUsuario());
+        }
+    }
+
+    private void setupForVisitante() {
+        // Setup UI for VISITANTE
+    }
+
+    private void setupForOrganizador() {
+        // Setup UI for ORGANIZADOR
+    }
+
+    private void setupForAutor() {
+        // Setup UI for AUTOR
     }
 
     @FXML

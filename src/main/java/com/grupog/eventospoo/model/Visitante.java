@@ -5,7 +5,7 @@ public class Visitante extends Usuario {
     String feedback;
 
     public Visitante(String nome, String cpf, String instituicao, String senha, String email) {
-        super(nome, cpf, instituicao, senha, email);
+        super(nome, cpf, instituicao, senha, email, TipoUsuario.VISITANTE);
     }
 
     public int getId() {

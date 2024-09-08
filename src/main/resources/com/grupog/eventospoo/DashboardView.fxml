@@ -22,13 +22,14 @@
       </Text>
       <MenuBar layoutY="1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="27.0" prefWidth="1253.0">
         <menus>
-          <Menu mnemonicParsing="false" text="Conta" >
+          <Menu mnemonicParsing="false" text="Conta">
             <items>
                <MenuItem mnemonicParsing="false" text="Alterar nome" />
                <MenuItem mnemonicParsing="false" text="Alterar senha" />
-               <MenuItem mnemonicParsing="false" text="Sair" onAction="#handleLogout" />
+               <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Sair" />
             </items>
           </Menu>
+            <Menu fx:id="tipoUsuario" disable="true" mnemonicParsing="false" text="Tipo" />
         </menus>
       </MenuBar>
       <TabPane layoutX="40.0" layoutY="110.0" prefHeight="519.0" prefWidth="910.0" tabClosingPolicy="UNAVAILABLE">

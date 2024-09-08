@@ -9,13 +9,28 @@ public class Usuario {
     private String email;
     private String senha;
     private List<Evento> eventosInscritos;
+    private TipoUsuario tipoUsuario;
 
-    public Usuario(String nome, String cpf, String instituicao, String senha, String email) {
+    public Usuario(String nome, String cpf, String instituicao, String senha, String email, TipoUsuario tipoUsuario) {
         this.nome = nome;
         this.cpf = cpf;
         this.instituicao = instituicao;
         this.senha = senha;
         this.email = email;
+        this.tipoUsuario = tipoUsuario;
+    }
+
+    public void setEventosInscritos(List<Evento> eventosInscritos) {
+        this.eventosInscritos = eventosInscritos;
+    }
+
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        if (tipoUsuario == null) return;
+        this.tipoUsuario = tipoUsuario;
     }
 
     public String getNome() {

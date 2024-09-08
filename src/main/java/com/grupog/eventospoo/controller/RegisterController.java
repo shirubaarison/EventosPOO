@@ -65,7 +65,7 @@ public class RegisterController {
         String hashedPassword = hashPassword(senhaValue);
 
         // Criar e adicionar o novo usuário ao sistema
-        Usuario novoUsuario = new Usuario(nome, cpfValue, instituicaoValue, hashedPassword , emailValue);
+        Usuario novoUsuario = new Usuario(nome, cpfValue, instituicaoValue, hashedPassword , emailValue, tipo);
         systemModel.addUsuario(novoUsuario);
 
         // Fechar essa janela e limpar

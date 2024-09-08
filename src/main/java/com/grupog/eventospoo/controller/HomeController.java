@@ -1,6 +1,7 @@
 package com.grupog.eventospoo.controller;
 
 import com.grupog.eventospoo.model.SystemModel;
+import com.grupog.eventospoo.model.Usuario;
 import com.grupog.eventospoo.view.DashboardView;
 import com.grupog.eventospoo.view.LoginView;
 import com.grupog.eventospoo.view.RegisterView;
@@ -27,7 +28,7 @@ public class HomeController {
             if (novoUsuarioLogado != null) {
                 System.out.println("Bem vindo ao gigante... " + novoUsuarioLogado.getNome() + ".");
                 try {
-                    showDashboard();
+                    showDashboard(novoUsuarioLogado);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -54,8 +55,8 @@ public class HomeController {
 
 
     // Troca a tela pro dashboard
-    private void showDashboard() throws IOException {
-        DashboardView dashboardView = new DashboardView();
+    private void showDashboard(Usuario usuarioConectado) throws IOException {
+        DashboardView dashboardView = new DashboardView(usuarioConectado);
         primaryStage.setScene(dashboardView.getScene());
     }
 

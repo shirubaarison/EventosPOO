@@ -14,7 +14,7 @@ public class HomeView {
 
     public HomeView(Stage stage) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/HomeView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/HomeView.fxml"));
         Parent root = loader.load();
 
         Scene homeScene = new Scene(root);

@@ -22,7 +22,7 @@
       </VBox>
       <ImageView fitHeight="637.0" fitWidth="772.0" layoutX="347.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../../../images/file.jpg" />
+            <Image url="@../../../../images/file.jpg" />
          </image>
       </ImageView>
       <Button onAction="#handleLogin" layoutX="187.0" layoutY="402.0" mnemonicParsing="false" prefHeight="24.0" prefWidth="81.0" text="Logar" />

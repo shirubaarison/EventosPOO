@@ -15,6 +15,6 @@
     </VBox>
     <Text layoutX="172.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bem vindo ao sistema de Eventos Academicos!" />
     <ImageView fitHeight="295.0" fitWidth="248.0" layoutX="544.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true">
-        <Image url="@../../../images/file.jpg" />
+        <Image url="@../../../../images/file.jpg" />
     </ImageView>
 </Pane>

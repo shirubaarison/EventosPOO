@@ -1,11 +1,15 @@
 package com.grupog.eventospoo.controller;
 
+import com.grupog.eventospoo.model.Evento;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.Usuario;
 import com.grupog.eventospoo.view.HomeView;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -16,13 +20,23 @@ import java.util.Map;
 public class DashboardController {
 
     @FXML
+    private Text boasVindas;
+
+    @FXML
+    private HBox eventosCard;
+
+    @FXML
+    private VBox eventosInscritosCard;
+
+    @FXML
+    private Tab tab;
+
+    @FXML
     private Menu tipoUsuario;
 
     @FXML
     private VBox usersVBox;
 
-    @FXML
-    private Text boasVindas;
 
     public void carregarUsuarios() {
         // Map dos usuários do sistema
@@ -45,6 +59,52 @@ public class DashboardController {
         }
     }
 
+    private void carregarEventos() {
+        // Deletar elementos existentes (se houver)
+        eventosCard.getChildren().clear();
+
+        Map<String, Evento> eventos = systemModel.getEventos();
+
+        for (Map.Entry<String, Evento> entry : eventos.entrySet()) {
+            String eventId = entry.getKey();
+            Evento evento = entry.getValue();
+
+            Label eventNameLabel = new Label(evento.getNome());
+
+            Label eventLocationLabel = new Label("Local: " + evento.getLocalizacao().getNome());
+
+            Label eventTimeLabel = new Label("Hora: " + evento.getHora());
+
+            VBox eventContainer = new VBox();
+            eventContainer.getChildren().addAll(eventNameLabel, eventLocationLabel, eventTimeLabel);
+            eventContainer.setSpacing(10);
+
+            eventosCard.getChildren().add(eventContainer);
+        }
+    }
+
+    private void carregarEventosInscritos() {
+        // Clear existing elements (if any)
+        eventosInscritosCard.getChildren().clear();
+
+        Map<String, Evento> eventosInscritos = systemModel.getEventosIncritos();
+
+        for (Map.Entry<String, Evento> entry : eventosInscritos.entrySet()) {
+            String eventName = entry.getKey();
+            Evento evento = entry.getValue();
+
+            Label eventNameLabel = new Label(evento.getNome());
+            Label eventLocationLabel = new Label("Local: " + evento.getLocalizacao().getNome());
+            Label eventTimeLabel = new Label("Hora: " + evento.getHora());
+
+            VBox eventContainer = new VBox();
+            eventContainer.getChildren().addAll(eventNameLabel, eventLocationLabel, eventTimeLabel);
+            eventContainer.setSpacing(10);
+
+            eventosInscritosCard.getChildren().add(eventContainer);
+        }
+    }
+
     private SystemModel systemModel;
 
     @FXML
@@ -56,6 +116,7 @@ public class DashboardController {
         Usuario usuarioConectado = systemModel.getUsuarioLogado();
 
         carregarUsuarios();
+        carregarEventos();
         inicializarPorUsuario(usuarioConectado);
     }
 
@@ -71,20 +132,23 @@ public class DashboardController {
                 setupForAutor();
                 break;
             default:
-                throw new IllegalArgumentException("Unknown user type: " + usuario.getTipoUsuario());
+                throw new IllegalArgumentException("Tipo de usuário desconhecido: " + usuario.getTipoUsuario());
         }
     }
 
     private void setupForVisitante() {
-        // Setup UI for VISITANTE
+        //
     }
 
     private void setupForOrganizador() {
-        // Setup UI for ORGANIZADOR
+        // Adicionar tab de organizador
+        tab.getTabPane().getTabs().add(new Tab("Organização"));
+
     }
 
     private void setupForAutor() {
-        // Setup UI for AUTOR
+        // Adicionar tab de Autor
+        tab.getTabPane().getTabs().add(new Tab("Autor"));
     }
 
     @FXML
@@ -99,6 +163,7 @@ public class DashboardController {
         Stage primaryStage = (Stage) boasVindas.getScene().getWindow();
         primaryStage.close();
 
+        // Voltar para página inicial
         Stage newStage = new Stage();
         new HomeView(newStage);
     }

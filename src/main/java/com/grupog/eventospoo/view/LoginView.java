@@ -12,7 +12,7 @@ public class LoginView {
     private final Stage stage;
 
     public LoginView(Stage ownerStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/LoginView.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/LoginView.fxml"));
         Parent root = loader.load();
 
         Scene loginScene = new Scene(root);

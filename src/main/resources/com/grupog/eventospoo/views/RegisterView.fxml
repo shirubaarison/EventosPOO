@@ -31,7 +31,7 @@
         </VBox>
         <ImageView fitHeight="637.0" fitWidth="772.0" layoutX="347.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true" rotate="9.0">
             <image>
-                <Image url="@../../../images/file.jpg" />
+                <Image url="@../../../../images/file.jpg" />
             </image>
         </ImageView>
         <Button layoutX="179.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleRegistration" prefHeight="33.0" prefWidth="89.0" text="Registrar" />

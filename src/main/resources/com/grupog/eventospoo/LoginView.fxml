@@ -9,6 +9,7 @@
 <?import javafx.scene.text.Text?>
 
 
+<?import javafx.scene.control.PasswordField?>
 <AnchorPane prefHeight="614.0" prefWidth="1082.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grupog.eventospoo.controller.LoginController">
    <children>
       <VBox alignment="CENTER_LEFT" layoutX="47.0" layoutY="212.0" prefHeight="190.0" prefWidth="221.0" spacing="10.0">
@@ -16,7 +17,7 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Usuário" />
             <TextField promptText="Usuario" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Senha" />
-            <TextField prefHeight="24.0" prefWidth="171.0" promptText="Senha" />
+            <PasswordField prefHeight="24.0" prefWidth="171.0" promptText="Senha" />
          </children>
       </VBox>
       <ImageView fitHeight="637.0" fitWidth="772.0" layoutX="347.0" layoutY="-11.0" pickOnBounds="true" preserveRatio="true">

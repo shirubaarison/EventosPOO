@@ -2,6 +2,7 @@ package com.grupog.eventospoo.controller;
 
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.Usuario;
+import com.grupog.eventospoo.view.DashboardView;
 import com.grupog.eventospoo.view.LoginView;
 import com.grupog.eventospoo.view.RegisterView;
 import javafx.beans.value.ChangeListener;
@@ -24,6 +25,10 @@ public class HomeController {
 
     private SystemModel systemModel;
 
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
     public void initialize() {
         systemModel = SystemModel.getInstance();
 
@@ -33,6 +38,11 @@ public class HomeController {
             public void changed(ObservableValue<? extends Usuario> observableValue, Usuario usuario, Usuario novo) {
                 if (novo != null) {
                     System.out.println("Bem vindo ao gigante... " + novo.getNome() + ".");
+                    try {
+                        showDashboard();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
@@ -50,4 +60,8 @@ public class HomeController {
         registerView.show();
     }
 
+    private void showDashboard() throws IOException {
+        DashboardView dashboardView = new DashboardView(primaryStage);
+        dashboardView.show();
+    }
 }

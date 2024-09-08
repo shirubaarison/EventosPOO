@@ -1,41 +1,71 @@
 package com.grupog.eventospoo.model;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
-public class Usuario {
+public abstract class Usuario {
     private String nome;
-    private String senha;
-    private String tipo; // organizador, visitante ou patrocinador
+    private String cpf;
+    private String instituicao;
+    private String email;
+    private List<Evento> eventosInscritos;
 
-
-    private static Map<String, Map<String, String>> credenciaisPorTipo = new HashMap<>();
-
-    static {
-        credenciaisPorTipo.put("Visitante", new HashMap<>());
-        credenciaisPorTipo.put("Organizador", new HashMap<>());
-        credenciaisPorTipo.put("Patrocinador", new HashMap<>());
-    }
-
-    
-    public Usuario(String nome, String senha, String tipo) {
+    Usuario(String nome, String cpf, String instituicao, String email) {
         this.nome = nome;
-        this.senha = senha;
-        this.tipo = tipo;
-        adicionarCredenciais(tipo, nome, senha);
+        this.cpf = cpf;
+        this.instituicao = instituicao;
+        this.email = email;
     }
 
-    private static void adicionarCredenciais(String tipo, String nome, String senha) {
-        if (credenciaisPorTipo.containsKey(tipo)) {
-            credenciaisPorTipo.get(tipo).put(nome, senha);
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        if (nome != null) {
+            this.nome = nome;
         }
     }
 
-    public static boolean autenticar(String tipo, String nome, String senha) {
-        if (credenciaisPorTipo.containsKey(tipo)) {
-            Map<String, String> credenciais = credenciaisPorTipo.get(tipo);
-            return credenciais.containsKey(nome) && credenciais.get(nome).equals(senha); //procurar por usuario e senha correspondente
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        if (cpf != null) {
+            this.cpf = cpf;
         }
-        return false; // colocar um alert dizendo senha/nome incorreto
+    }
+
+    public String getInstituicao() {
+        return instituicao;
+    }
+
+    public void setInstituicao(String instituicao) {
+        if (instituicao != null) {
+            this.instituicao = instituicao;
+        }
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        if (email != null) {
+            this.email = email;
+        }
+    }
+
+    public List<Evento> getEventosInscritos() {
+        return eventosInscritos;
+    }
+
+    // Por enquanto ta como string, mas logo vai ser uma classe
+    public void inscreverNoEvento(Evento evento) {
+        this.eventosInscritos.add(evento);
+    }
+
+    public void cancelarInscricao(Evento evento) {
+        this.eventosInscritos.remove(evento);
     }
 }

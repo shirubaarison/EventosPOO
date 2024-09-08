@@ -69,6 +69,7 @@ public class RegisterController {
         return true;
     }
 
+    // Methodo para caso dê algum erro
     private void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");

@@ -2,6 +2,8 @@ package com.grupog.eventospoo.model;
 
 import java.time.LocalDateTime;
 
+import com.grupog.eventospoo.utils.exceptions.CertificadoException;
+
 public class Certificado {
     private int id;
     private LocalDateTime dateTime;
@@ -13,7 +15,9 @@ public class Certificado {
     }
 
     public void setId(int id) {
-        if (id > 0) {
+        if (id < 0) {
+            throw new CertificadoException.InvalidIdException("Id não pode ser negativo.\n");
+        }else {
             this.id = id;
         }
     }
@@ -23,7 +27,11 @@ public class Certificado {
     }
 
     public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+        if (dateTime == null) {
+            throw new CertificadoException.InvalidDateTimeException("Data não pode ser nula.\n");
+        }else {
+            this.dateTime = dateTime;
+        }
     }
 
     public boolean isStatus() {
@@ -39,7 +47,9 @@ public class Certificado {
     }
 
     public void setObservacao(String observacao) {
-        if (observacao != null) {
+        if (observacao == null || observacao.isEmpty()) {
+            throw new CertificadoException.InvalidObservacaoException("Observação não pode ser nula.\n");
+        }else {
             this.observacao = observacao;
         }
     }

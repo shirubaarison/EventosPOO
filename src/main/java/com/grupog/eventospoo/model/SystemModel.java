@@ -81,6 +81,7 @@ public class SystemModel {
 
     public void logout() {
         setUsuarioLogado(null);
+        eventosInscritos.clear();
     }
 
     public ObjectProperty<Usuario> usuarioLogadoProperty() {

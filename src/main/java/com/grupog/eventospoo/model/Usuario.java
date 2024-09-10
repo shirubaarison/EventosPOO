@@ -20,6 +20,7 @@ public class Usuario {
         setSenha(senha);
         setEmail(email);
         setTipoUsuario(tipoUsuario);
+        this.eventosInscritos = new ArrayList<>();
     }
 
     public void setEventosInscritos(List<Evento> eventosInscritos) {
@@ -92,7 +93,7 @@ public class Usuario {
         this.eventosInscritos.add(evento);
     }
 
-    public void cancelarInscricao(Evento evento) {
+    public void desinscreverDoEvento(Evento evento) {
         if (!this.eventosInscritos.contains(evento)) {
             throw new UsuarioException.EventoNaoEncontradoException("Evento não encontrado na lista de inscritos.");
         }

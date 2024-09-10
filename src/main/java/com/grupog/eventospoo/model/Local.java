@@ -17,10 +17,14 @@ public class Local {
     }
 
     public void setId(int id) {
-        if (id <= 0) {
-            throw new LocalException.InvalidIdException("ID deve ser maior que zero.");
+        try {
+            if (id <= 0) {
+                throw new LocalException.InvalidIdException("ID deve ser maior que zero.");
+            }
+            this.id = id;
+        } catch (LocalException.InvalidIdException e) {
+            System.out.println("Erro ao definir ID do local: " + e.getMessage());
         }
-        this.id = id;
     }
 
     public String getNome() {
@@ -28,10 +32,14 @@ public class Local {
     }
 
     public void setNome(String nome) {
-        if (nome == null || nome.trim().isEmpty()) {
-            throw new LocalException.InvalidNomeException("Nome não pode ser nulo ou vazio.");
+        try {
+            if (nome == null || nome.trim().isEmpty()) {
+                throw new LocalException.InvalidNomeException("Nome não pode ser nulo ou vazio.");
+            }
+            this.nome = nome;
+        } catch (LocalException.InvalidNomeException e) {
+            System.out.println("Erro ao definir nome do local: " + e.getMessage());
         }
-        this.nome = nome;
     }
 
     public String getEndereco() {
@@ -39,9 +47,13 @@ public class Local {
     }
 
     public void setEndereco(String endereco) {
-        if (endereco == null || endereco.trim().isEmpty()) {
-            throw new LocalException.InvalidEnderecoException("Endereço não pode ser nulo ou vazio.");
+        try {
+            if (endereco == null || endereco.trim().isEmpty()) {
+                throw new LocalException.InvalidEnderecoException("Endereço não pode ser nulo ou vazio.");
+            }
+            this.endereco = endereco;
+        } catch (LocalException.InvalidEnderecoException e) {
+            System.out.println("Erro ao definir endereço do local: " + e.getMessage());
         }
-        this.endereco = endereco;
     }
 }

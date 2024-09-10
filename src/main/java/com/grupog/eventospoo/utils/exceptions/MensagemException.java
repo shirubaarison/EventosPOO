@@ -1,6 +1,6 @@
 package com.grupog.eventospoo.utils.exceptions;
 
-public class MensagemException extends RuntimeException {
+public class MensagemException extends Exception {
     public MensagemException(String message) {
         super(message);
     }
@@ -18,6 +18,11 @@ public class MensagemException extends RuntimeException {
 
     public static class MensagemNulaException extends MensagemException {
         public MensagemNulaException(String message) {
+            super(message);
+        }
+    }
+    public static class StatusInvalido extends MensagemException {
+        public StatusInvalido(String message) {
             super(message);
         }
     }

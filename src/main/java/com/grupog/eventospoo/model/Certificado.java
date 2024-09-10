@@ -15,24 +15,31 @@ public class Certificado {
     }
 
     public void setId(int id) {
-        if (id < 0) {
-            throw new CertificadoException.InvalidIdException("Id não pode ser negativo.\n");
-        }else {
-            this.id = id;
+        try {
+            if (id < 0) {
+            throw new CertificadoException.InvalidIdException("Id não pode ser negativo.");
+        }this.id = id; }
+        catch (CertificadoException.InvalidIdException e) {
+            System.out.println("Erro ao definir id" + e.getMessage());
         }
     }
+
 
     public LocalDateTime getDateTime() {
         return dateTime;
     }
 
     public void setDateTime(LocalDateTime dateTime) {
-        if (dateTime == null) {
+        try {
+            if (dateTime == null) {
             throw new CertificadoException.InvalidDateTimeException("Data não pode ser nula.\n");
-        }else {
-            this.dateTime = dateTime;
         }
-    }
+            this.dateTime = dateTime; }
+            catch (CertificadoException.InvalidDateTimeException e) {
+                System.out.println("Erro ao definir data" + e.getMessage());
+            }
+        }
+    
 
     public boolean isStatus() {
         return status;
@@ -47,10 +54,12 @@ public class Certificado {
     }
 
     public void setObservacao(String observacao) {
+        try {
         if (observacao == null || observacao.isEmpty()) {
             throw new CertificadoException.InvalidObservacaoException("Observação não pode ser nula.\n");
-        }else {
-            this.observacao = observacao;
+        } this.observacao = observacao; }
+        catch(CertificadoException.InvalidObservacaoException e) {
+            System.out.println("Erro ao definir a observação." + e.getMessage());
         }
     }
 }

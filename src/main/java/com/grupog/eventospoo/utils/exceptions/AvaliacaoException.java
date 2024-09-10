@@ -1,6 +1,6 @@
 package com.grupog.eventospoo.utils.exceptions;
 
-public class AvaliacaoException extends RuntimeException {
+public class AvaliacaoException extends Exception {
     public AvaliacaoException(String message) {
         super(message);
     }

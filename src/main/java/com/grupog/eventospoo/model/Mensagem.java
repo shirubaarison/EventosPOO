@@ -16,17 +16,27 @@ public class Mensagem {
     }
 
     public void alterarStatus(Status status) {
-        if (status != null) {
-            this.status = status;
+        try {
+            if (status != null) {
+            throw new MensagemException.StatusInvalido("Status inválido.");   
+        }
+        this.status = status;
+    }   catch (MensagemException.StatusInvalido e) {
+        System.out.println("Erro ao definir status" + e.getMessage());
+    }
+    }
+    
+    public void alterarMensagem(String novaMensagem) {
+        try {
+            if (novaMensagem == null || novaMensagem.isEmpty()) {
+            throw new MensagemException.MensagemNulaException("Mensagem não pode ser nula ou vazia.");
+        }
+        this.texto = novaMensagem; }
+        catch (MensagemException.MensagemNulaException e ) {
+            System.out.println("Erro" + e.getMessage());
         }
     }
 
-    public void alterarMensagem(String novaMensagem) {
-        if (novaMensagem == null || novaMensagem.isEmpty()) {
-            throw new MensagemException.MensagemNulaException("Mensagem não pode ser nula ou vazia.");
-        }
-        this.texto = novaMensagem;
-    }
 
     @Override
     public String toString() {

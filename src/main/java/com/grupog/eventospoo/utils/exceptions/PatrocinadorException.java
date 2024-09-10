@@ -1,6 +1,6 @@
 package com.grupog.eventospoo.utils.exceptions;
 
-public class PatrocinadorException extends RuntimeException {
+public class PatrocinadorException extends Exception {
     public PatrocinadorException(String message) {
         super(message);
     }

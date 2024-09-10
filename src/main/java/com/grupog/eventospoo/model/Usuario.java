@@ -32,10 +32,14 @@ public class Usuario {
     }
 
     public void setTipoUsuario(TipoUsuario tipoUsuario) {
-        if (tipoUsuario == null) {
-            throw new UsuarioException.InvalidTipoUsuarioException("Tipo de usuário inválido. Não pode ser nulo.");
+        try {
+            if (tipoUsuario == null) {
+                throw new UsuarioException.InvalidTipoUsuarioException("Tipo de usuário inválido. Não pode ser nulo.");
+            }
+            this.tipoUsuario = tipoUsuario;
+        } catch (UsuarioException.InvalidTipoUsuarioException e) {
+            System.out.println("Erro ao definir tipo de usuário: " + e.getMessage());
         }
-        this.tipoUsuario = tipoUsuario;
     }
 
     public String getNome() {
@@ -43,10 +47,14 @@ public class Usuario {
     }
 
     public void setNome(String nome) {
-        if (nome == null || nome.isEmpty()) {
-            throw new UsuarioException.InvalidNomeException("Nome inválido. Não pode ser nulo ou vazio.");
+        try {
+            if (nome == null || nome.isEmpty()) {
+                throw new UsuarioException.InvalidNomeException("Nome inválido. Não pode ser nulo ou vazio.");
+            }
+            this.nome = nome;
+        } catch (UsuarioException.InvalidNomeException e) {
+            System.out.println("Erro ao definir nome de usuário: " + e.getMessage());
         }
-        this.nome = nome;
     }
 
     public String getCpf() {
@@ -54,10 +62,14 @@ public class Usuario {
     }
 
     public void setCpf(String cpf) {
-        if (cpf == null || cpf.length() != 14) { // contando os "." e "-"
-            throw new UsuarioException.InvalidCpfException("CPF inválido.");
+        try {
+            if (cpf == null || cpf.length() != 14) { // contando os "." e "-"
+                throw new UsuarioException.InvalidCpfException("CPF inválido.");
+            }
+            this.cpf = cpf;
+        } catch (UsuarioException.InvalidCpfException e) {
+            System.out.println("Erro ao definir o CPF: " + e.getMessage());
         }
-        this.cpf = cpf;
     }
 
     public String getInstituicao() {
@@ -65,10 +77,14 @@ public class Usuario {
     }
 
     public void setInstituicao(String instituicao) {
-        if (instituicao == null || instituicao.isEmpty()) {
-            throw new UsuarioException.InvalidInstituicaoException("Instituição inválida. Não pode ser nula ou vazia.");
+        try {
+            if (instituicao == null || instituicao.isEmpty()) {
+                throw new UsuarioException.InvalidInstituicaoException("Instituição inválida. Não pode ser nula ou vazia.");
+            }
+            this.instituicao = instituicao;
+        } catch (UsuarioException.InvalidInstituicaoException e) {
+            System.out.println("Erro ao definir a instituição: " + e.getMessage());
         }
-        this.instituicao = instituicao;
     }
 
     public String getEmail() {
@@ -76,10 +92,14 @@ public class Usuario {
     }
 
     public void setEmail(String email) {
-        if (email == null || !email.contains("@")) { // genial
-            throw new UsuarioException.InvalidEmailException("Email inválido.");
+        try {
+            if (email == null || !email.contains("@")) { 
+                throw new UsuarioException.InvalidEmailException("Email inválido.");
+            }
+            this.email = email;
+        } catch (UsuarioException.InvalidEmailException e) {
+            System.out.println("Erro ao definir email: " + e.getMessage());
         }
-        this.email = email;
     }
 
     public List<Evento> getEventosInscritos() {
@@ -87,17 +107,25 @@ public class Usuario {
     }
 
     public void inscreverNoEvento(Evento evento) {
-        if (evento == null) {
-            throw new UsuarioException.InvalidEventoException("Evento inválido. Não pode ser nulo.");
+        try {
+            if (evento == null) {
+                throw new UsuarioException.InvalidEventoException("Evento inválido. Não pode ser nulo.");
+            }
+            this.eventosInscritos.add(evento);
+        } catch (UsuarioException.InvalidEventoException e) {
+            System.out.println("Erro ao inscrever no evento: " + e.getMessage());
         }
-        this.eventosInscritos.add(evento);
     }
 
     public void desinscreverDoEvento(Evento evento) {
-        if (!this.eventosInscritos.contains(evento)) {
-            throw new UsuarioException.EventoNaoEncontradoException("Evento não encontrado na lista de inscritos.");
+        try {
+            if (!this.eventosInscritos.contains(evento)) {
+                throw new UsuarioException.EventoNaoEncontradoException("Evento não encontrado na lista de inscritos.");
+            }
+            this.eventosInscritos.remove(evento);
+        } catch (UsuarioException.EventoNaoEncontradoException e) {
+            System.out.println("Erro ao cancelar inscrição no evento: " + e.getMessage());
         }
-        this.eventosInscritos.remove(evento);
     }
 
     public String getSenha() {
@@ -105,9 +133,13 @@ public class Usuario {
     }
 
     public void setSenha(String senha) {
-        if (senha == null || senha.length() < 6) {
-            throw new UsuarioException.InvalidSenhaException("Senha inválida. Deve ter pelo menos 6 caracteres.");
+        try {
+            if (senha == null || senha.length() < 6) {
+                throw new UsuarioException.InvalidSenhaException("Senha inválida. Deve ter pelo menos 6 caracteres.");
+            }
+            this.senha = senha;
+        } catch (UsuarioException.InvalidSenhaException e) {
+            System.out.println("Erro ao definir senha: " + e.getMessage());
         }
-        this.senha = senha;
     }
 }

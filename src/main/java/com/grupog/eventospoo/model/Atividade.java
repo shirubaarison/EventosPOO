@@ -4,16 +4,15 @@ import com.grupog.eventospoo.utils.exceptions.AtividadeException;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Atividade {
     private int id;
     private String titulo;
     private TipoAtividade tipo;
-
     private final LocalDate horario = LocalDate.now();
     private Autor autor;
-    private List<Avaliacao> avaliacoes;
-
+    private List<Avaliacao> avaliacoes = new ArrayList<>();
     private boolean concluido = false;
     private boolean cancelado = false;
 
@@ -22,10 +21,14 @@ public class Atividade {
     }
 
     public void setId(int id) {
-        if (id <= 0) {
-            throw new AtividadeException.InvalidIdException("ID inválido. O valor deve ser maior que zero.");
+        try {
+            if (id <= 0) {
+                throw new AtividadeException.InvalidIdException("ID inválido. O valor deve ser maior que zero.");
+            }
+            this.id = id;
+        } catch (AtividadeException.InvalidIdException e) {
+            System.out.println("Erro ao definir o ID da atividade: " + e.getMessage());
         }
-        this.id = id;
     }
 
     public String getTitulo() {
@@ -33,10 +36,14 @@ public class Atividade {
     }
 
     public void setTitulo(String titulo) {
-        if (titulo == null || titulo.isEmpty()) {
-            throw new AtividadeException.InvalidTituloException("Título inválido. Não pode ser nulo ou vazio.");
+        try {
+            if (titulo == null || titulo.isEmpty()) {
+                throw new AtividadeException.InvalidTituloException("Título inválido. Não pode ser nulo ou vazio.");
+            }
+            this.titulo = titulo;
+        } catch (AtividadeException.InvalidTituloException e) {
+            System.out.println("Erro ao definir o título da atividade: " + e.getMessage());
         }
-        this.titulo = titulo;
     }
 
     public TipoAtividade getTipo() {
@@ -44,10 +51,14 @@ public class Atividade {
     }
 
     public void setTipo(TipoAtividade tipo) {
-        if (tipo == null) {
-            throw new AtividadeException.InvalidTipoAtividadeException("Tipo de atividade inválido. Não pode ser nulo.");
+        try {
+            if (tipo == null) {
+                throw new AtividadeException.InvalidTipoAtividadeException("Tipo de atividade inválido. Não pode ser nulo.");
+            }
+            this.tipo = tipo;
+        } catch (AtividadeException.InvalidTipoAtividadeException e) {
+            System.out.println("Erro ao definir o tipo da atividade: " + e.getMessage());
         }
-        this.tipo = tipo;
     }
 
     public Autor getAutor() {
@@ -59,24 +70,36 @@ public class Atividade {
     }
 
     public void adicionarAvaliacao(Avaliacao av) {
-        if (av == null) {
-            throw new AtividadeException.AvaliacaoInvalidaException("Avaliação inválida. Não pode ser nula.");
+        try {
+            if (av == null) {
+                throw new AtividadeException.AvaliacaoInvalidaException("Avaliação inválida. Não pode ser nula.");
+            }
+            this.avaliacoes.add(av);
+        } catch (AtividadeException.AvaliacaoInvalidaException e) {
+            System.out.println("Erro ao adicionar a avaliação: " + e.getMessage());
         }
-        this.avaliacoes.add(av);
     }
 
     public void cancelarAtividade() {
-        if (cancelado) {
-            throw new AtividadeException.AtividadeJaCanceladaException("A atividade já foi cancelada.");
+        try {
+            if (cancelado) {
+                throw new AtividadeException.AtividadeJaCanceladaException("A atividade já foi cancelada.");
+            }
+            this.cancelado = true;
+        } catch (AtividadeException.AtividadeJaCanceladaException e) {
+            System.out.println("Erro ao cancelar a atividade: " + e.getMessage());
         }
-        this.cancelado = true;
     }
 
     public void concluirAtividade() {
-        if (concluido) {
-            throw new AtividadeException.AtividadeJaConcluidaException("A atividade já foi concluída.");
+        try {
+            if (concluido) {
+                throw new AtividadeException.AtividadeJaConcluidaException("A atividade já foi concluída.");
+            }
+            this.concluido = true;
+        } catch (AtividadeException.AtividadeJaConcluidaException e) {
+            System.out.println("Erro ao concluir a atividade: " + e.getMessage());
         }
-        this.concluido = true;
     }
 
     public LocalDate getHorario() {

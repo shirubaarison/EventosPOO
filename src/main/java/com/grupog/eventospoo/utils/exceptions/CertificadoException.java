@@ -1,6 +1,6 @@
 package com.grupog.eventospoo.utils.exceptions;
 
-public class CertificadoException extends RuntimeException {
+public class CertificadoException extends Exception {
     public CertificadoException(String message) {
         super(message);
     }

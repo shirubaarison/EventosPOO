@@ -2,6 +2,7 @@ package com.grupog.eventospoo.model;
 
 import java.time.LocalDateTime;
 import com.grupog.eventospoo.utils.exceptions.AvaliacaoException;
+import com.grupog.eventospoo.utils.exceptions.EventoException;
 
 public class Avaliacao {
     private int id;
@@ -12,12 +13,32 @@ public class Avaliacao {
     private Usuario usuario;
 
     public Avaliacao(Evento evento, int nota, String comentario, LocalDateTime dateTime, Usuario usuario) {
+        try {
+        if (evento == null) {
+            throw new AvaliacaoException.InvalidEventoException("Evento não encontrado.");
+        }
+        if (nota < 0) {
+            throw new AvaliacaoException.InvalidNotaException("Nota não pode ser negativa.");
+        }
+        if (comentario == null || comentario.isEmpty()) {
+            throw new AvaliacaoException.InvalidComentarioException("Comentário nulo.");
+        }
+        if (dateTime == null) {
+            throw new AvaliacaoException.InvalidDateTimeException("Data inválida.");
+        }
+        if (usuario == null) {
+            throw new AvaliacaoException.InvalidUserException("Usuário não encontrado.");
+        }
         setEvento(evento);
         setNota(nota);
         setComentario(comentario);
         setDateTime(dateTime);
         setUsuario(usuario);
+    } catch(AvaliacaoException.InvalidEventoException |AvaliacaoException.InvalidNotaException | AvaliacaoException.InvalidComentarioException | AvaliacaoException.InvalidDateTimeException | AvaliacaoException.InvalidUserException e) {
+        System.out.println("Erro ao criar avaliação: " + e.getMessage());
     }
+    }
+
 
     public Usuario getUsuario() {
         return usuario;

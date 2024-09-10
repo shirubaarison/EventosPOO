@@ -1,12 +1,20 @@
 package com.grupog.eventospoo.model;
 
 import com.grupog.eventospoo.utils.exceptions.VisitanteException;
+import com.grupog.eventospoo.utils.exceptions.UsuarioException;
+import com.grupog.eventospoo.utils.exceptions.VisitanteException;
 
 public class Visitante extends Usuario {
     private int id;
     private String feedback;
 
-    public Visitante(String nome, String cpf, String instituicao, String senha, String email) {
+    public Visitante(String nome, String cpf, String instituicao, String senha, String email) 
+            throws UsuarioException.InvalidNomeException, 
+                   UsuarioException.InvalidCpfException, 
+                   UsuarioException.InvalidInstituicaoException, 
+                   UsuarioException.InvalidSenhaException, 
+                   UsuarioException.InvalidEmailException, 
+                   UsuarioException.InvalidTipoUsuarioException {
         super(nome, cpf, instituicao, senha, email, TipoUsuario.VISITANTE);
     }
 
@@ -57,22 +65,15 @@ public class Visitante extends Usuario {
             if (atividade == null) {
                 throw new VisitanteException.AtividadeNotProvidedException("A atividade deve ser fornecida.");
             }
-            return this.feedback != null;
-        } catch (VisitanteException.AtividadeNotProvidedException e) {
+            if (this.feedback == null || this.feedback.trim().isEmpty()) {
+                throw new VisitanteException.InvalidFeedbackException("Feedback não pode ser nulo ou vazio.");
+            }
+            // Lógica para enviar feedback, se houver
+            return true; // Supondo que o envio de feedback é sempre bem-sucedido
+        } catch (VisitanteException.AtividadeNotProvidedException | VisitanteException.InvalidFeedbackException e) {
             System.out.println("Erro ao enviar feedback: " + e.getMessage());
             return false;
         }
     }
 
-    public String obterLocalizacao(Atividade atividade) {
-        try {
-            if (atividade == null) {
-                throw new VisitanteException.AtividadeNotProvidedException("Passe a atividade para pesquisar.");
-            }
-            return atividade.getInformacoes();
-        } catch (VisitanteException.AtividadeNotProvidedException e) {
-            System.out.println("Erro ao obter a localização da atividade: " + e.getMessage());
-            return null;
-        }
-    }
 }

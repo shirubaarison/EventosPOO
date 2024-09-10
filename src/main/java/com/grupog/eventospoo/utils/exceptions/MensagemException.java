@@ -26,4 +26,16 @@ public class MensagemException extends Exception {
             super(message);
         }
     }
+    public static class InvalidRemetente extends MensagemException {
+        public InvalidRemetente(String message) {
+            super(message);
+        }
+    }
+    public static class InvalidHorario extends MensagemException {
+        public InvalidHorario(String message) {
+            super(message);
+        }
+    }
 }
+
+

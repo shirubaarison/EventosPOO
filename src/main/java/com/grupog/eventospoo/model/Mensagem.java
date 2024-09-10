@@ -8,7 +8,20 @@ public class Mensagem {
     private final String horario;
     private Status status;
 
-    Mensagem(String texto, Organizador remetente, String horario, Status status) {
+    public Mensagem(String texto, Organizador remetente, String horario, Status status) throws MensagemException.MensagemInvalidaException, MensagemException.InvalidRemetente, MensagemException.InvalidHorario, MensagemException.StatusInvalido {
+        if (texto == null) {
+            throw new MensagemException.MensagemInvalidaException("Mensagem não pode ser nula.");
+        }
+        if (remetente == null) {
+            throw new MensagemException.InvalidRemetente("Remetente não pode ser nulo.");
+        }
+        if (horario == null || horario.isEmpty()) {
+            throw new MensagemException.InvalidHorario("Horário não pode ser nulo ou vazio.");
+        }
+        if (status == null) {
+            throw new MensagemException.StatusInvalido("Status não pode ser nulo.");
+        }
+
         this.texto = texto;
         this.remetente = remetente;
         this.horario = horario;
@@ -25,7 +38,7 @@ public class Mensagem {
         System.out.println("Erro ao definir status" + e.getMessage());
     }
     }
-    
+
     public void alterarMensagem(String novaMensagem) {
         try {
             if (novaMensagem == null || novaMensagem.isEmpty()) {

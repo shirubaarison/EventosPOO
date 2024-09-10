@@ -15,10 +15,22 @@ public class AvaliacaoException extends Exception {
             super(message);
         }
     }
+    
+    public static class InvalidEventoException extends AvaliacaoException {
+        public InvalidEventoException(String message) {
+            super(message);
+        }
+    }
 
     
     public static class InvalidNotaException extends AvaliacaoException {
         public InvalidNotaException(String message) {
+            super(message);
+        }
+    }
+
+    public static class InvalidUserException extends AvaliacaoException {
+        public InvalidUserException(String message) {
             super(message);
         }
     }

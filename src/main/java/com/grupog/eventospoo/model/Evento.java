@@ -10,8 +10,7 @@ public class Evento {
     private String hora;
     private Local localizacao;
 
-    public Evento(int id, String nome, String descricao, Date data, String hora, Local localizacao) {
-        this.id = id;
+    public Evento(String nome, String descricao, Date data, String hora, Local localizacao) {
         this.nome = nome;
         this.descricao = descricao;
         this.data = data;

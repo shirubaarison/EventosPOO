@@ -3,6 +3,9 @@ package com.grupog.eventospoo.model;
 import com.grupog.eventospoo.utils.PasswordUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,18 +16,18 @@ public class SystemModel {
     private static SystemModel instance;
 
     private final Map<String, Usuario> usuarios = new HashMap<>();
-    private final Map<String, Evento> eventos = new HashMap<>();
+    private final ObservableMap<String, Evento> eventos = FXCollections.observableHashMap();
     private final ObjectProperty<Usuario> usuarioLogado = new SimpleObjectProperty<>();
+    private final ObservableMap<String, Evento> eventosInscritos = FXCollections.observableHashMap();
 
     public SystemModel() {
-        // Inicializar com alguns usuários...
+        // Initialize with some users and events
         addUsuario(new Usuario("amostradinho", "123.123.123-43", "UFC", PasswordUtils.hashPassword("123"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
         addUsuario(new Usuario("caska de bala", "113.123.123-43", "UFBA", PasswordUtils.hashPassword("22"), "caska@gmail.com", TipoUsuario.ORGANIZADOR));
         addUsuario(new Usuario("borabill", "123.123.123-43", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com", TipoUsuario.AUTOR));
 
-        // Inicializar com alguns eventos...
-        addEvento(new Evento(1, "SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local(1, "UFC Campus Russas", "Rua Universitária")));
-        addEvento(new Evento(1, "Torneio de Baladeira", "Valendo 2 milhões", new Date(), "01:00", new Local(2, "Figuereido", "Figuereido")));
+        addEvento(new Evento("SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local("UFC Campus Russas", "Rua Universitária")));
+        addEvento(new Evento("Torneio de Baladeira", "Valendo 2 milhões", new Date(), "01:00", new Local("Figuereido", "Figuereido")));
     }
 
     public static SystemModel getInstance() {
@@ -38,10 +41,6 @@ public class SystemModel {
         return usuarios.get(nome);
     }
 
-    public Evento getEvento(String nome) {
-        return eventos.get(nome);
-    }
-
     public void addUsuario(Usuario user) {
         if (user != null) {
             this.usuarios.put(user.getNome(), user);
@@ -49,12 +48,12 @@ public class SystemModel {
             throw new IllegalArgumentException("Tentativa de adicionar usuário nulo");
         }
     }
-    
+
     public void addEvento(Evento evento) {
         if (evento != null) {
             this.eventos.put(evento.getNome(), evento);
         } else {
-            throw new IllegalArgumentException("Tentativa de adicionar usuário nulo");
+            throw new IllegalArgumentException("Tentativa de adicionar evento nulo");
         }
     }
 
@@ -62,26 +61,12 @@ public class SystemModel {
         return usuarios;
     }
 
-    public Map<String, Evento> getEventos() {
+    public ObservableMap<String, Evento> getEventos() {
         return eventos;
     }
 
-    public Map<String, Evento> getEventosIncritos() {
-        Map<String, Evento> eventosIncristos = new HashMap<>();
-
-        Usuario usuario = getUsuarioLogado();
-
-        if (usuario != null) {
-            List<Evento> eventosIncristosList = usuario.getEventosInscritos();
-
-            for (Evento evento : eventosIncristosList) {
-                if (eventos.containsKey(evento.getNome())) {
-                    eventosIncristos.put(evento.getNome(), eventos.get(evento.getNome()));
-                }
-            }
-        }
-
-        return eventosIncristos;
+    public ObservableMap<String, Evento> getEventosInscritos() {
+        return eventosInscritos;
     }
 
     public Usuario getUsuarioLogado() {
@@ -111,5 +96,25 @@ public class SystemModel {
         }
 
         return false;
+    }
+
+    public void inscrever(Evento evento) {
+        if (evento == null) return; // Optionally throw exception
+
+        Usuario usuarioConectado = getUsuarioLogado();
+        if (usuarioConectado == null) return; // Handle case where no user is logged in
+
+        usuarioConectado.inscreverNoEvento(evento);
+        eventosInscritos.put(evento.getNome(), evento);
+    }
+
+    public void desinscrever(Evento evento) {
+        if (evento == null) return; // Optionally throw exception
+
+        Usuario usuarioConectado = getUsuarioLogado();
+        if (usuarioConectado == null) return; // Handle case where no user is logged in
+
+        usuarioConectado.desinscreverDoEvento(evento);
+        eventosInscritos.remove(evento.getNome());
     }
 }

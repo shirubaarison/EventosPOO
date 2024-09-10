@@ -6,8 +6,7 @@ public class Local {
     private String endereco;
 
 
-    public Local(int id, String nome, String endereco) {
-        this.id = id;
+    public Local(String nome, String endereco) {
         this.nome = nome;
         this.endereco = endereco;
     }

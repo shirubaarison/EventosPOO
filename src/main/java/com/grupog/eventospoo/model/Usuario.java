@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Usuario {
@@ -18,6 +19,7 @@ public class Usuario {
         this.senha = senha;
         this.email = email;
         this.tipoUsuario = tipoUsuario;
+        this.eventosInscritos = new ArrayList<>();
     }
 
     public void setEventosInscritos(List<Evento> eventosInscritos) {
@@ -82,7 +84,7 @@ public class Usuario {
         this.eventosInscritos.add(evento);
     }
 
-    public void cancelarInscricao(Evento evento) {
+    public void desinscreverDoEvento(Evento evento) {
         this.eventosInscritos.remove(evento);
     }
 

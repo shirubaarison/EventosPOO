@@ -4,11 +4,13 @@ import com.grupog.eventospoo.model.Evento;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.Usuario;
 import com.grupog.eventospoo.view.HomeView;
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -37,6 +39,46 @@ public class DashboardController {
     @FXML
     private VBox usersVBox;
 
+    private SystemModel systemModel;
+
+    @FXML
+    public void initialize() {
+        systemModel = SystemModel.getInstance();
+        boasVindas.setText("Boas vindas " + systemModel.getUsuarioLogado().getNome() + "!");
+        tipoUsuario.setText(systemModel.getUsuarioLogado().getTipoUsuario().toString());
+
+        Usuario usuarioConectado = systemModel.getUsuarioLogado();
+
+        // Carregar tudo...
+        carregarUsuarios();
+        carregarEventos();
+        carregarEventosInscritos();
+        inicializarPorUsuario(usuarioConectado);
+
+        // Escuta de novos eventos
+        systemModel.getEventos().addListener(new MapChangeListener<String, Evento>()  {
+            @Override
+            public void onChanged(Change<? extends String, ? extends Evento> change) {
+                if (change.wasAdded() || change.wasRemoved()) {
+                    // Handle added event
+                    System.out.println("Novo evento adicionado: " + change.getValueAdded().getNome());
+                    // Optionally update UI or trigger other logic
+                }
+            }
+        });
+
+        // Escutar mudanças caso evento tenha sido inscrito
+        systemModel.getEventosInscritos().addListener(new MapChangeListener<String, Evento>() {
+            @Override
+            public void onChanged(Change<? extends String, ? extends Evento> change) {
+                if (change.wasAdded() || change.wasRemoved()) {
+                    // Atualizar a view
+                    carregarEventos();
+                    carregarEventosInscritos();
+                }
+            }
+        });
+    }
 
     public void carregarUsuarios() {
         // Map dos usuários do sistema
@@ -45,9 +87,17 @@ public class DashboardController {
         // Deletar elementos existentes (se houver)
         usersVBox.getChildren().clear();
 
-        // Criar Label para cada usuário que existe no sistema
+        String usuarioConectadoNome = systemModel.getUsuarioLogado().getNome();
+
+        // Criar Label para cada usuário que existe no sistema, é o sistema de chat
         for (Map.Entry<String, Usuario> entry : usuarios.entrySet()) {
             String userName = entry.getKey();
+
+            // dar skip se for o proprio usuario
+            if (userName.equals(usuarioConectadoNome)) {
+                continue;
+            }
+
             Label userLabel = new Label(userName);
             userLabel.setStyle("-fx-padding:10;");
 
@@ -60,93 +110,157 @@ public class DashboardController {
     }
 
     private void carregarEventos() {
-        // Deletar elementos existentes (se houver)
         eventosCard.getChildren().clear();
 
+        // Map dos eventos existentes
         Map<String, Evento> eventos = systemModel.getEventos();
 
+        if (eventos == null || eventos.isEmpty()) {
+            Label noEventsLabel = new Label("Nenhum evento disponível.");
+            eventosCard.getChildren().add(noEventsLabel);
+            return;
+        }
+
+        // Criar uma card para cada evento existente
         for (Map.Entry<String, Evento> entry : eventos.entrySet()) {
-            String eventId = entry.getKey();
             Evento evento = entry.getValue();
 
-            Label eventNameLabel = new Label(evento.getNome());
+            Label nomeEvento = new Label(evento.getNome());
+            Label localizacaoEvento = new Label("Local: " + evento.getLocalizacao().getNome());
+            Label horaEvento = new Label("Hora: " + evento.getHora());
 
-            Label eventLocationLabel = new Label("Local: " + evento.getLocalizacao().getNome());
+            Button verMaisButao = getDetalhesEventoButton(evento);
 
-            Label eventTimeLabel = new Label("Hora: " + evento.getHora());
+            VBox eventoContainer = new VBox();
+            eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
+            eventoContainer.setSpacing(15);
 
-            VBox eventContainer = new VBox();
-            eventContainer.getChildren().addAll(eventNameLabel, eventLocationLabel, eventTimeLabel);
-            eventContainer.setSpacing(10);
+            eventoContainer.setStyle("-fx-border-color: #000000;" +
+                    "-fx-border-width: 2;" +
+                    "-fx-border-radius: 10;" +
+                    "-fx-background-radius: 10;" +
+                    "-fx-padding: 15;" +
+                    "-fx-background-color: #f0f0f0;");
 
-            eventosCard.getChildren().add(eventContainer);
+            eventosCard.getChildren().add(eventoContainer);
         }
     }
 
+
+    private Button getDetalhesEventoButton(Evento evento) {
+        Button verMaisButao = new Button("Ver Detalhes");
+
+        verMaisButao.setOnAction(e -> {
+            Stage detailsStage = new Stage();
+            detailsStage.setTitle("Detalhes do Evento");
+
+            VBox detailsLayout = new VBox(10);
+            detailsLayout.setPadding(new Insets(10));
+
+            Label detailsNameLabel = new Label("Nome: " + evento.getNome());
+            Label detailsLocationLabel = new Label("Localização: " + evento.getLocalizacao().getNome());
+            Label detailsTimeLabel = new Label("Hora: " + evento.getHora());
+            Label detailsDescriptionLabel = new Label("Descrição: " + evento.getDescricao());
+
+            detailsLayout.getChildren().addAll(detailsNameLabel, detailsLocationLabel, detailsTimeLabel, detailsDescriptionLabel);
+
+            Scene detailsScene = new Scene(detailsLayout, 300, 200);
+            Button inscricaoButton = getInscricaoButton(evento, detailsStage);
+            detailsLayout.getChildren().add(inscricaoButton);
+            detailsStage.setScene(detailsScene);
+            detailsStage.show();
+        });
+
+        return verMaisButao;
+    }
+
+    private Button getInscricaoButton(Evento evento, Stage detailsStage) {
+        Button inscricaoButton = new Button();
+
+        boolean isSubscribed = systemModel.getEventosInscritos().containsValue(evento);
+        inscricaoButton.setText(isSubscribed ? "Desinscrever" : "Se inscrever");
+
+        inscricaoButton.setOnAction(inscricaoEvent -> {
+            if (isSubscribed) {
+                System.out.println("Desinscrevendo evento: " + evento.getNome());
+                systemModel.desinscrever(evento);
+            } else {
+                System.out.println("Inscrevendo no evento: " + evento.getNome());
+                systemModel.inscrever(evento);
+            }
+
+            // Fechar após a pessoa clicar para se inscrever ou desinscrever do evento
+            Platform.runLater(() -> {
+                boolean updatedSubscribedStatus = systemModel.getEventosInscritos().containsValue(evento);
+                inscricaoButton.setText(updatedSubscribedStatus ? "Desinscrever" : "Se inscrever");
+                detailsStage.close(); // Close the details window
+            });
+        });
+
+        return inscricaoButton;
+    }
+
+
+    // Mesma coisa de carregar eventos, mas esse apenas para eventos inscritos pelo usuário
     private void carregarEventosInscritos() {
-        // Clear existing elements (if any)
         eventosInscritosCard.getChildren().clear();
 
-        Map<String, Evento> eventosInscritos = systemModel.getEventosIncritos();
+        // Get the list of subscribed events
+        Map<String, Evento> eventosInscritos = systemModel.getEventosInscritos();
+
+        if (eventosInscritos.isEmpty()) {
+            Label noInscritosLabel = new Label("Você não está inscrito em nenhum evento.");
+            eventosInscritosCard.getChildren().add(noInscritosLabel);
+
+            noInscritosLabel.setMaxWidth(300);
+            return;
+        }
 
         for (Map.Entry<String, Evento> entry : eventosInscritos.entrySet()) {
-            String eventName = entry.getKey();
             Evento evento = entry.getValue();
 
-            Label eventNameLabel = new Label(evento.getNome());
-            Label eventLocationLabel = new Label("Local: " + evento.getLocalizacao().getNome());
-            Label eventTimeLabel = new Label("Hora: " + evento.getHora());
+            Label nomeEvento = new Label(evento.getNome());
+            Label localizacaoEvento = new Label("Local: " + evento.getLocalizacao().getNome());
+            Label horaEvento = new Label("Hora: " + evento.getHora());
+            Button verMaisButao = getDetalhesEventoButton(evento);
 
-            VBox eventContainer = new VBox();
-            eventContainer.getChildren().addAll(eventNameLabel, eventLocationLabel, eventTimeLabel);
-            eventContainer.setSpacing(10);
+            VBox eventoContainer = new VBox();
+            eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
+            eventoContainer.setSpacing(15);
+            eventoContainer.setStyle("-fx-border-color: #000000;" +
+                    "-fx-border-width: 2;" +
+                    "-fx-border-radius: 10;" +
+                    "-fx-background-radius: 10;" +
+                    "-fx-padding: 15;" +
+                    "-fx-background-color: #f0f0f0;");
 
-            eventosInscritosCard.getChildren().add(eventContainer);
+            eventosInscritosCard.getChildren().add(eventoContainer);
         }
     }
 
-    private SystemModel systemModel;
-
-    @FXML
-    public void initialize() {
-        systemModel = SystemModel.getInstance();
-        boasVindas.setText("Boas vindas " + systemModel.getUsuarioLogado().getNome() + "!");
-        tipoUsuario.setText(systemModel.getUsuarioLogado().getTipoUsuario().toString());
-
-        Usuario usuarioConectado = systemModel.getUsuarioLogado();
-
-        carregarUsuarios();
-        carregarEventos();
-        inicializarPorUsuario(usuarioConectado);
-    }
 
     public void inicializarPorUsuario(Usuario usuario) {
         switch (usuario.getTipoUsuario()) {
             case VISITANTE:
-                setupForVisitante();
                 break;
             case ORGANIZADOR:
-                setupForOrganizador();
+                setupOrganizador();
                 break;
             case AUTOR:
-                setupForAutor();
+                setupAutor();
                 break;
             default:
                 throw new IllegalArgumentException("Tipo de usuário desconhecido: " + usuario.getTipoUsuario());
         }
     }
 
-    private void setupForVisitante() {
-        //
-    }
-
-    private void setupForOrganizador() {
+    private void setupOrganizador() {
         // Adicionar tab de organizador
         tab.getTabPane().getTabs().add(new Tab("Organização"));
 
     }
 
-    private void setupForAutor() {
+    private void setupAutor() {
         // Adicionar tab de Autor
         tab.getTabPane().getTabs().add(new Tab("Autor"));
     }

@@ -11,15 +11,35 @@ public class Evento {
     private String hora;
     private Local localizacao;
 
+    public Evento(String nome, String descricao, Date data, String hora, Local localizacao) throws EventoException.InvalidNomeException, EventoException.InvalidDescricaoException, EventoException.InvalidDataException, EventoException.InvalidHoraException, EventoException.InvalidLocalizacaoException {
+        try {
+            if (nome == null || nome.isEmpty()) {
+                throw new EventoException.InvalidNomeException("Nome não pode ser nulo ou vazio.");
+            }
+            if (descricao == null || descricao.isEmpty()) {
+                throw new EventoException.InvalidDescricaoException("Descrição não pode ser nula ou vazia.");
+            }
+            if (data == null) {
+                throw new EventoException.InvalidDataException("Data não pode ser nula.");
+            }
+            if (hora == null || hora.trim().isEmpty()) {
+                throw new EventoException.InvalidHoraException("Hora não pode ser nula ou vazia.");
+            }
+            if (localizacao == null) {
+                throw new EventoException.InvalidLocalizacaoException("Localização não pode ser nula.");
+            }
 
-    public Evento(String nome, String descricao, Date data, String hora, Local localizacao) {
-        setNome(nome);
-        setDescricao(descricao);
-        setData(data);
-        setHora(hora);
-        setLocalizacao(localizacao);
+            setNome(nome);
+            setDescricao(descricao);
+            setData(data);
+            setHora(hora);
+            setLocalizacao(localizacao);
+
+        } catch (EventoException.InvalidNomeException | EventoException.InvalidDescricaoException | EventoException.InvalidDataException | EventoException.InvalidHoraException | EventoException.InvalidLocalizacaoException e) {
+            System.out.println("Erro ao criar o evento: " + e.getMessage());
+            throw e; 
+        }
     }
-    
 
     public int getId() {
         return id;
@@ -56,7 +76,14 @@ public class Evento {
     }
 
     public void setDescricao(String descricao) {
-        this.descricao = descricao;
+        try {
+            if (descricao == null || descricao.trim().isEmpty()) {
+                throw new EventoException.InvalidDescricaoException("Descrição não pode ser nula ou vazia.");
+            }
+            this.descricao = descricao;
+        } catch (EventoException.InvalidDescricaoException e) {
+            System.out.println("Erro ao definir a descrição do evento: " + e.getMessage());
+        }
     }
 
     public Date getData() {

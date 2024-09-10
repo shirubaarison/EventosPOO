@@ -1,8 +1,8 @@
 package com.grupog.eventospoo.model;
 
 import java.util.ArrayList;
-import com.grupog.eventospoo.utils.exceptions.UsuarioException;
 import java.util.List;
+import com.grupog.eventospoo.utils.exceptions.UsuarioException;
 
 public class Usuario {
     private String nome;
@@ -13,13 +13,38 @@ public class Usuario {
     private List<Evento> eventosInscritos;
     private TipoUsuario tipoUsuario;
 
-    public Usuario(String nome, String cpf, String instituicao, String senha, String email, TipoUsuario tipoUsuario) {
-        setNome(nome);
-        setCpf(cpf);
-        setInstituicao(instituicao);
-        setSenha(senha);
-        setEmail(email);
-        setTipoUsuario(tipoUsuario);
+    public Usuario(String nome, String cpf, String instituicao, String senha, String email, TipoUsuario tipoUsuario) 
+            throws UsuarioException.InvalidNomeException, 
+                   UsuarioException.InvalidCpfException, 
+                   UsuarioException.InvalidInstituicaoException, 
+                   UsuarioException.InvalidSenhaException, 
+                   UsuarioException.InvalidEmailException, 
+                   UsuarioException.InvalidTipoUsuarioException {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new UsuarioException.InvalidNomeException("Nome não pode ser nulo ou vazio.");
+        }
+        if (cpf == null || cpf.length() != 14) { 
+            throw new UsuarioException.InvalidCpfException("CPF inválido. Deve ter 14 caracteres.");
+        }
+        if (instituicao == null || instituicao.trim().isEmpty()) {
+            throw new UsuarioException.InvalidInstituicaoException("Instituição não pode ser nula ou vazia.");
+        }
+        if (senha == null || senha.length() < 6) {
+            throw new UsuarioException.InvalidSenhaException("Senha inválida. Deve ter pelo menos 6 caracteres.");
+        }
+        if (email == null || !email.contains("@")) {
+            throw new UsuarioException.InvalidEmailException("Email inválido.");
+        }
+        if (tipoUsuario == null) {
+            throw new UsuarioException.InvalidTipoUsuarioException("Tipo de usuário não pode ser nulo.");
+        }
+
+        this.nome = nome;
+        this.cpf = cpf;
+        this.instituicao = instituicao;
+        this.senha = senha;
+        this.email = email;
+        this.tipoUsuario = tipoUsuario;
         this.eventosInscritos = new ArrayList<>();
     }
 

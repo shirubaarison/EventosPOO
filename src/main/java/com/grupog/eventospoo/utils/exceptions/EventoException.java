@@ -9,7 +9,6 @@ public class EventoException extends Exception {
         super(message, cause);
     }
 
-    // Exceções não verificadas (RuntimeException)
     public static class InvalidIdException extends EventoException {
         public InvalidIdException(String message) {
             super(message);
@@ -40,7 +39,12 @@ public class EventoException extends Exception {
         }
     }
 
-    // Exceções verificadas (Exception)
+    public static class InvalidNotaException extends EventoException {
+        public InvalidNotaException(String message) {
+            super(message);
+        }
+    }
+
     public static class EventoNotFoundException extends Exception {
         public EventoNotFoundException(String message) {
             super(message);
@@ -58,6 +62,11 @@ public class EventoException extends Exception {
 
         public InvalidEventoException(String message, Throwable cause) {
             super(message, cause);
+        }
+    }
+    public static class InvalidDescricaoException extends EventoException {
+        public InvalidDescricaoException(String message) {
+            super(message);
         }
     }
 }

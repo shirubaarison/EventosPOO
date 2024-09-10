@@ -8,9 +8,19 @@ public class Local {
     private String endereco;
 
     public Local(String nome, String endereco) {
-        setNome(nome); 
-        setEndereco(endereco); 
+        try {
+            if (nome == null || nome.isEmpty()) {
+                throw new LocalException.InvalidNomeException("Nome nulo é inválido.");
+            }
+            if (endereco == null || endereco.isEmpty()) {
+                throw new LocalException.InvalidEnderecoException("Endereço nulo é inválido");
+            }
+                setNome(nome); 
+                setEndereco(endereco); 
+    } catch (LocalException.InvalidNomeException | LocalException.InvalidEnderecoException e) {
+        System.out.println("Não foi possível criar o local.");
     }
+}
 
     public int getId() {
         return id;

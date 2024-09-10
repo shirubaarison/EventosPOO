@@ -1,5 +1,7 @@
 package com.grupog.eventospoo.model;
 
+import com.grupog.eventospoo.utils.exceptions.MensagemException;
+
 public class Mensagem {
     private String texto;
     private final Organizador remetente;
@@ -14,15 +16,16 @@ public class Mensagem {
     }
 
     public void alterarStatus(Status status) {
-        if (status != null) this.status = status;
+        if (status != null) {
+            this.status = status;
+        }
     }
 
     public void alterarMensagem(String novaMensagem) {
-        if (!novaMensagem.isEmpty()) {
-            this.texto = novaMensagem;
-        } else {
-            throw new ExceptionInInitializerError("Mensagem não existe");
+        if (novaMensagem == null || novaMensagem.isEmpty()) {
+            throw new MensagemException.MensagemNulaException("Mensagem não pode ser nula ou vazia.");
         }
+        this.texto = novaMensagem;
     }
 
     @Override

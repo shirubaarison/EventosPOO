@@ -1,6 +1,7 @@
 package com.grupog.eventospoo.model;
 
 import java.util.Date;
+import com.grupog.eventospoo.utils.exceptions.EventoException;
 
 public class Evento {
     private int id;
@@ -10,19 +11,22 @@ public class Evento {
     private String hora;
     private Local localizacao;
 
-    public Evento(String nome, String descricao, Date data, String hora, Local localizacao) {
-        this.nome = nome;
-        this.descricao = descricao;
-        this.data = data;
-        this.hora = hora;
-        this.localizacao = localizacao;
+    public Evento(String nome, String descricao, Date data, String hora, Local localizacao) throws EventoException.InvalidIdException, EventoException.InvalidNomeException, EventoException.InvalidDataException, EventoException.InvalidHoraException, EventoException.InvalidLocalizacaoException {
+        setNome(nome);
+        setDescricao(descricao);
+        setData(data);
+        setHora(hora);
+        setLocalizacao(localizacao);
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(int id) throws EventoException.InvalidIdException {
+        if (id <= 0) {
+            throw new EventoException.InvalidIdException("ID inválido. Deve ser maior que zero.");
+        }
         this.id = id;
     }
 
@@ -30,7 +34,10 @@ public class Evento {
         return nome;
     }
 
-    public void setNome(String nome) {
+    public void setNome(String nome) throws EventoException.InvalidNomeException {
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new EventoException.InvalidNomeException("Nome não pode ser nulo ou vazio.");
+        }
         this.nome = nome;
     }
 
@@ -46,7 +53,10 @@ public class Evento {
         return data;
     }
 
-    public void setData(Date data) {
+    public void setData(Date data) throws EventoException.InvalidDataException {
+        if (data == null) {
+            throw new EventoException.InvalidDataException("Data não pode ser nula.");
+        }
         this.data = data;
     }
 
@@ -54,7 +64,10 @@ public class Evento {
         return hora;
     }
 
-    public void setHora(String hora) {
+    public void setHora(String hora) throws EventoException.InvalidHoraException {
+        if (hora == null || hora.trim().isEmpty()) {
+            throw new EventoException.InvalidHoraException("Hora não pode ser nula ou vazia.");
+        }
         this.hora = hora;
     }
 
@@ -62,9 +75,10 @@ public class Evento {
         return localizacao;
     }
 
-    public void setLocalizacao(Local localizacao) {
-        if (localizacao != null) {
-            this.localizacao = localizacao;
+    public void setLocalizacao(Local localizacao) throws EventoException.InvalidLocalizacaoException {
+        if (localizacao == null) {
+            throw new EventoException.InvalidLocalizacaoException("Localização não pode ser nula.");
         }
+        this.localizacao = localizacao;
     }
 }

@@ -1,14 +1,12 @@
 package com.grupog.eventospoo.controller;
 
-import com.grupog.eventospoo.model.Evento;
-import com.grupog.eventospoo.model.Local;
-import com.grupog.eventospoo.model.SystemModel;
-import com.grupog.eventospoo.model.Usuario;
+import com.grupog.eventospoo.model.*;
 import com.grupog.eventospoo.utils.AlertUtils;
 import com.grupog.eventospoo.view.HomeView;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -21,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -43,6 +42,21 @@ public class DashboardController {
 
     @FXML
     private VBox usersVBox;
+
+    @FXML
+    private TextField eventoAvaliadoField;
+
+    @FXML
+    private TextField notaField;
+
+    @FXML
+    private TextField comentarioField;
+
+    @FXML
+    private Button submitAvaliacaoButton;
+
+    @FXML
+    private ListView<String> avaliacoesListView;
 
     private SystemModel systemModel;
 
@@ -241,6 +255,8 @@ public class DashboardController {
 
             eventosInscritosCard.getChildren().add(eventoContainer);
         }
+
+        eventosInscritosCard.setStyle("-fx-padding: 15");
     }
 
 
@@ -284,8 +300,8 @@ public class DashboardController {
         TextField eventDescriptionField = new TextField();
         eventDescriptionField.setPromptText("Descrição do Evento");
 
-        // Button to add event
         Button addEventButton = new Button("Adicionar Evento");
+
         addEventButton.setOnAction(e -> {
             String eventName = eventNameField.getText();
             String eventLocation = eventLocationField.getText();
@@ -299,7 +315,6 @@ public class DashboardController {
                 return;
             }
 
-            // Parse date
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date parsedDate;
             try {
@@ -309,13 +324,10 @@ public class DashboardController {
                 return;
             }
 
-            // Create new event
             Evento newEvent = new Evento(eventName, eventDescription, parsedDate, eventTime, new Local(eventLocation, "Endereço exemplo"));
 
-            // Add event to system model
             systemModel.addEvento(newEvent);
 
-            // Clear form fields after adding event
             eventNameField.clear();
             eventLocationField.clear();
             eventDateField.clear();
@@ -326,22 +338,26 @@ public class DashboardController {
 
         VBox addEventForm = new VBox(5, addEventLabel, eventNameField, eventLocationField, eventDateField, eventTimeField, eventDescriptionField, addEventButton);
 
-        // Removing Event Section
         Label removeEventLabel = new Label("Remover Evento");
 
-        ListView<Evento> eventosListView = new ListView<>();
-        eventosListView.getItems().addAll(systemModel.getEventos().values());
+        ListView<String> eventosListView = new ListView<>();
+        eventosListView.getItems().addAll(systemModel.getEventos().keySet());
 
-        // Button to remove event
         Button removeEventButton = new Button("Remover Evento");
         removeEventButton.setOnAction(e -> {
-            Evento selectedEvent = eventosListView.getSelectionModel().getSelectedItem();
+            String selectedEvent = eventosListView.getSelectionModel().getSelectedItem();
             if (selectedEvent != null) {
                 systemModel.removerEvento(selectedEvent);
                 eventosListView.getItems().remove(selectedEvent);
             } else {
                 AlertUtils.showAlert(Alert.AlertType.WARNING, "Nenhum Evento Selecionado", "Selecione um evento para remover.");
             }
+        });
+
+        // Escutar quando evento é adicionado ou removido
+        systemModel.getEventos().addListener((MapChangeListener<String, Evento>) change -> {
+            eventosListView.getItems().clear();
+            eventosListView.getItems().addAll(systemModel.getEventos().keySet());
         });
 
         VBox removeEventSection = new VBox(5, removeEventLabel, eventosListView, removeEventButton);
@@ -373,5 +389,59 @@ public class DashboardController {
         // Voltar para página inicial
         Stage newStage = new Stage();
         new HomeView(newStage);
+    }
+
+    @FXML
+    private void handleEnviarAvaliacao() {
+        // Get input values
+        String nomeEvento = eventoAvaliadoField.getText();
+        String notaText = notaField.getText();
+        String comentario = comentarioField.getText();
+
+        // Validate input
+        if (nomeEvento.isEmpty() || notaText.isEmpty() || comentario.isEmpty()) {
+            AlertUtils.showAlert("Por favor, preencha todos os campos.");
+            return;
+        }
+
+        int nota;
+        try {
+            nota = Integer.parseInt(notaText);
+            if (nota < 0 || nota > 10) {
+                AlertUtils.showAlert("A nota deve estar entre 0 e 10.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            AlertUtils.showAlert("Por favor, insira um número válido para a nota.");
+            return;
+        }
+
+        // Create a new Avaliacao object
+        Evento evento = systemModel.getEventos().get(nomeEvento);
+
+        // adicionar exception bro
+        if (evento == null) {
+            AlertUtils.showAlert("Evento inexistente, bro..");
+            return;
+        }
+
+        // Add the evaluation to the system (or associated event)
+        Usuario usuarioConectado = systemModel.getUsuarioLogado();
+        Avaliacao avaliacao = new Avaliacao(evento, nota, comentario, LocalDateTime.now(), usuarioConectado);
+        systemModel.addAvaliacao(avaliacao);
+
+        avaliacoesListView.getItems().add(formatAvaliacao(avaliacao));
+        eventoAvaliadoField.clear();
+        notaField.clear();
+        comentarioField.clear();
+    }
+    
+    private String formatAvaliacao(Avaliacao avaliacao) {
+        return String.format("Evento: %s\nNota: %d\nComentário: %s\nData: %s\nUsuário: %s",
+                avaliacao.getEvento().getNome(),
+                avaliacao.getNota(),
+                avaliacao.getComentario(),
+                avaliacao.getDateTime().toString(),
+                avaliacao.getUsuario().getNome());
     }
 }

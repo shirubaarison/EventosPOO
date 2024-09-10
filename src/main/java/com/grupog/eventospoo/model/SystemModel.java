@@ -19,6 +19,7 @@ public class SystemModel {
     private final ObservableMap<String, Evento> eventos = FXCollections.observableHashMap();
     private final ObjectProperty<Usuario> usuarioLogado = new SimpleObjectProperty<>();
     private final ObservableMap<String, Evento> eventosInscritos = FXCollections.observableHashMap();
+    private final ObservableList<Avaliacao> avaliacoes = FXCollections.observableArrayList();
 
     public SystemModel() {
         // Inicializa com usuários
@@ -135,5 +136,36 @@ public class SystemModel {
         }
 
         System.out.println("Evento " + evento.getNome() + " removido com sucesso.");
+    }
+
+    public void removerEvento(String nome) {
+        // Find the event by its name
+        Evento evento = eventos.get(nome);
+
+        // If the event doesn't exist, throw an exception
+        if (evento == null) {
+            throw new IllegalArgumentException("Tentativa de remover evento inexistente: " + nome);
+        }
+
+        // Proceed with the same logic as in removerEvento(Evento evento)
+        removerEvento(evento);
+    }
+
+    public void addAvaliacao(Avaliacao avaliacao) {
+        avaliacoes.add(avaliacao);
+    }
+
+    public ObservableList<Avaliacao> getAvaliacoes() {
+        return avaliacoes;
+    }
+
+    public ObservableList<Avaliacao> getAvaliacoesByEvento(Evento evento) {
+        ObservableList<Avaliacao> result = FXCollections.observableArrayList();
+        for (Avaliacao avaliacao : avaliacoes) {
+            if (avaliacao.getEvento().equals(evento)) {
+                result.add(avaliacao);
+            }
+        }
+        return result;
     }
 }

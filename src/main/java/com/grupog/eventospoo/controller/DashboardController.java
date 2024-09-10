@@ -1,8 +1,10 @@
 package com.grupog.eventospoo.controller;
 
 import com.grupog.eventospoo.model.Evento;
+import com.grupog.eventospoo.model.Local;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.Usuario;
+import com.grupog.eventospoo.utils.AlertUtils;
 import com.grupog.eventospoo.view.HomeView;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
@@ -17,6 +19,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 public class DashboardController {
@@ -28,7 +33,7 @@ public class DashboardController {
     private HBox eventosCard;
 
     @FXML
-    private VBox eventosInscritosCard;
+    private HBox eventosInscritosCard;
 
     @FXML
     private Tab tab;
@@ -62,7 +67,8 @@ public class DashboardController {
                 if (change.wasAdded() || change.wasRemoved()) {
                     // Handle added event
                     System.out.println("Novo evento adicionado: " + change.getValueAdded().getNome());
-                    // Optionally update UI or trigger other logic
+                    carregarEventos();
+                    carregarEventosInscritos();
                 }
             }
         });
@@ -193,7 +199,7 @@ public class DashboardController {
             Platform.runLater(() -> {
                 boolean updatedSubscribedStatus = systemModel.getEventosInscritos().containsValue(evento);
                 inscricaoButton.setText(updatedSubscribedStatus ? "Desinscrever" : "Se inscrever");
-                detailsStage.close(); // Close the details window
+                detailsStage.close();
             });
         });
 
@@ -205,7 +211,6 @@ public class DashboardController {
     private void carregarEventosInscritos() {
         eventosInscritosCard.getChildren().clear();
 
-        // Get the list of subscribed events
         Map<String, Evento> eventosInscritos = systemModel.getEventosInscritos();
 
         if (eventosInscritos.isEmpty()) {
@@ -255,9 +260,97 @@ public class DashboardController {
     }
 
     private void setupOrganizador() {
-        // Adicionar tab de organizador
-        tab.getTabPane().getTabs().add(new Tab("Organização"));
+        Tab organizadorTab = new Tab("Organização");
 
+        VBox organizadorLayout = new VBox(10);
+        organizadorLayout.setPadding(new Insets(10));
+
+        // Adding Event Section
+        Label addEventLabel = new Label("Adicionar Evento");
+
+        // Text fields for event details
+        TextField eventNameField = new TextField();
+        eventNameField.setPromptText("Nome do Evento");
+
+        TextField eventLocationField = new TextField();
+        eventLocationField.setPromptText("Local do Evento");
+
+        TextField eventDateField = new TextField();
+        eventDateField.setPromptText("Data do Evento (dd/MM/yyyy)");
+
+        TextField eventTimeField = new TextField();
+        eventTimeField.setPromptText("Hora do Evento (HH:mm)");
+
+        TextField eventDescriptionField = new TextField();
+        eventDescriptionField.setPromptText("Descrição do Evento");
+
+        // Button to add event
+        Button addEventButton = new Button("Adicionar Evento");
+        addEventButton.setOnAction(e -> {
+            String eventName = eventNameField.getText();
+            String eventLocation = eventLocationField.getText();
+            String eventDate = eventDateField.getText();
+            String eventTime = eventTimeField.getText();
+            String eventDescription = eventDescriptionField.getText();
+
+            // Validation
+            if (eventName.isEmpty() || eventLocation.isEmpty() || eventDate.isEmpty() || eventTime.isEmpty() || eventDescription.isEmpty()) {
+                AlertUtils.showAlert(Alert.AlertType.WARNING, "Campos Obrigatórios", "Por favor, preencha todos os campos.");
+                return;
+            }
+
+            // Parse date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Date parsedDate;
+            try {
+                parsedDate = dateFormat.parse(eventDate);
+            } catch (ParseException ex) {
+                AlertUtils.showAlert(Alert.AlertType.ERROR, "Data Inválida", "Formato de data inválido. Use dd/MM/yyyy.");
+                return;
+            }
+
+            // Create new event
+            Evento newEvent = new Evento(eventName, eventDescription, parsedDate, eventTime, new Local(eventLocation, "Endereço exemplo"));
+
+            // Add event to system model
+            systemModel.addEvento(newEvent);
+
+            // Clear form fields after adding event
+            eventNameField.clear();
+            eventLocationField.clear();
+            eventDateField.clear();
+            eventTimeField.clear();
+            eventDescriptionField.clear();
+
+        });
+
+        VBox addEventForm = new VBox(5, addEventLabel, eventNameField, eventLocationField, eventDateField, eventTimeField, eventDescriptionField, addEventButton);
+
+        // Removing Event Section
+        Label removeEventLabel = new Label("Remover Evento");
+
+        ListView<Evento> eventosListView = new ListView<>();
+        eventosListView.getItems().addAll(systemModel.getEventos().values());
+
+        // Button to remove event
+        Button removeEventButton = new Button("Remover Evento");
+        removeEventButton.setOnAction(e -> {
+            Evento selectedEvent = eventosListView.getSelectionModel().getSelectedItem();
+            if (selectedEvent != null) {
+                systemModel.removerEvento(selectedEvent);
+                eventosListView.getItems().remove(selectedEvent);
+            } else {
+                AlertUtils.showAlert(Alert.AlertType.WARNING, "Nenhum Evento Selecionado", "Selecione um evento para remover.");
+            }
+        });
+
+        VBox removeEventSection = new VBox(5, removeEventLabel, eventosListView, removeEventButton);
+
+        organizadorLayout.getChildren().addAll(addEventForm, removeEventSection);
+        organizadorTab.setContent(organizadorLayout);
+
+        // Add the "Organizador" tab to the tab pane
+        tab.getTabPane().getTabs().add(organizadorTab);
     }
 
     private void setupAutor() {

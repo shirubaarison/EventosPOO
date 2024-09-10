@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.model;
 
+import com.grupog.eventospoo.utils.exceptions.UsuarioException;
 import java.util.List;
 
 public class Usuario {
@@ -12,12 +13,12 @@ public class Usuario {
     private TipoUsuario tipoUsuario;
 
     public Usuario(String nome, String cpf, String instituicao, String senha, String email, TipoUsuario tipoUsuario) {
-        this.nome = nome;
-        this.cpf = cpf;
-        this.instituicao = instituicao;
-        this.senha = senha;
-        this.email = email;
-        this.tipoUsuario = tipoUsuario;
+        setNome(nome);
+        setCpf(cpf);
+        setInstituicao(instituicao);
+        setSenha(senha);
+        setEmail(email);
+        setTipoUsuario(tipoUsuario);
     }
 
     public void setEventosInscritos(List<Evento> eventosInscritos) {
@@ -29,7 +30,9 @@ public class Usuario {
     }
 
     public void setTipoUsuario(TipoUsuario tipoUsuario) {
-        if (tipoUsuario == null) return;
+        if (tipoUsuario == null) {
+            throw new UsuarioException.InvalidTipoUsuarioException("Tipo de usuário inválido. Não pode ser nulo.");
+        }
         this.tipoUsuario = tipoUsuario;
     }
 
@@ -38,9 +41,10 @@ public class Usuario {
     }
 
     public void setNome(String nome) {
-        if (nome != null) {
-            this.nome = nome;
+        if (nome == null || nome.isEmpty()) {
+            throw new UsuarioException.InvalidNomeException("Nome inválido. Não pode ser nulo ou vazio.");
         }
+        this.nome = nome;
     }
 
     public String getCpf() {
@@ -48,9 +52,10 @@ public class Usuario {
     }
 
     public void setCpf(String cpf) {
-        if (cpf != null) {
-            this.cpf = cpf;
+        if (cpf == null || cpf.length() != 14) { // contando os "." e "-"
+            throw new UsuarioException.InvalidCpfException("CPF inválido.");
         }
+        this.cpf = cpf;
     }
 
     public String getInstituicao() {
@@ -58,9 +63,10 @@ public class Usuario {
     }
 
     public void setInstituicao(String instituicao) {
-        if (instituicao != null) {
-            this.instituicao = instituicao;
+        if (instituicao == null || instituicao.isEmpty()) {
+            throw new UsuarioException.InvalidInstituicaoException("Instituição inválida. Não pode ser nula ou vazia.");
         }
+        this.instituicao = instituicao;
     }
 
     public String getEmail() {
@@ -68,21 +74,27 @@ public class Usuario {
     }
 
     public void setEmail(String email) {
-        if (email != null) {
-            this.email = email;
+        if (email == null || !email.contains("@")) { // genial
+            throw new UsuarioException.InvalidEmailException("Email inválido.");
         }
+        this.email = email;
     }
 
     public List<Evento> getEventosInscritos() {
         return eventosInscritos;
     }
 
-    // Por enquanto ta como string, mas logo vai ser uma classe
     public void inscreverNoEvento(Evento evento) {
+        if (evento == null) {
+            throw new UsuarioException.InvalidEventoException("Evento inválido. Não pode ser nulo.");
+        }
         this.eventosInscritos.add(evento);
     }
 
     public void cancelarInscricao(Evento evento) {
+        if (!this.eventosInscritos.contains(evento)) {
+            throw new UsuarioException.EventoNaoEncontradoException("Evento não encontrado na lista de inscritos.");
+        }
         this.eventosInscritos.remove(evento);
     }
 
@@ -91,6 +103,9 @@ public class Usuario {
     }
 
     public void setSenha(String senha) {
+        if (senha == null || senha.length() < 6) {
+            throw new UsuarioException.InvalidSenhaException("Senha inválida. Deve ter pelo menos 6 caracteres.");
+        }
         this.senha = senha;
     }
 }

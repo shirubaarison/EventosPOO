@@ -1,15 +1,16 @@
 package com.grupog.eventospoo.model;
 
+import com.grupog.eventospoo.utils.exceptions.LocalException;
+
 public class Local {
     private int id;
     private String nome;
     private String endereco;
 
-
     public Local(int id, String nome, String endereco) {
-        this.id = id;
-        this.nome = nome;
-        this.endereco = endereco;
+        setId(id); 
+        setNome(nome); 
+        setEndereco(endereco); 
     }
 
     public int getId() {
@@ -17,9 +18,10 @@ public class Local {
     }
 
     public void setId(int id) {
-        if (id > 0) {
-            this.id = id;
+        if (id <= 0) {
+            throw new LocalException.InvalidIdException("ID deve ser maior que zero.");
         }
+        this.id = id;
     }
 
     public String getNome() {
@@ -27,9 +29,10 @@ public class Local {
     }
 
     public void setNome(String nome) {
-        if (nome != null) {
-            this.nome = nome;
+        if (nome == null || nome.trim().isEmpty()) {
+            throw new LocalException.InvalidNomeException("Nome não pode ser nulo ou vazio.");
         }
+        this.nome = nome;
     }
 
     public String getEndereco() {
@@ -37,8 +40,9 @@ public class Local {
     }
 
     public void setEndereco(String endereco) {
-        if (endereco != null) {
-            this.endereco = endereco;
+        if (endereco == null || endereco.trim().isEmpty()) {
+            throw new LocalException.InvalidEnderecoException("Endereço não pode ser nulo ou vazio.");
         }
+        this.endereco = endereco;
     }
 }

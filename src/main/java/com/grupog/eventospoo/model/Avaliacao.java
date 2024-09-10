@@ -5,9 +5,37 @@ import com.grupog.eventospoo.utils.exceptions.AvaliacaoException;
 
 public class Avaliacao {
     private int id;
+    private Evento evento;
     private int nota;
     private String comentario;
     private LocalDateTime dateTime;
+    private Usuario usuario;
+
+    public Avaliacao(Evento evento, int nota, String comentario, LocalDateTime dateTime, Usuario usuario) {
+        setEvento(evento);
+        setNota(nota);
+        setComentario(comentario);
+        setDateTime(dateTime);
+        setUsuario(usuario);
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        if (usuario == null) return;
+        this.usuario = usuario;
+    }
+
+    public Evento getEvento() {
+        return evento;
+    }
+
+    public void setEvento(Evento evento) {
+        if (evento == null) return;
+        this.evento = evento;
+    }
 
     public int getId() {
         return id;

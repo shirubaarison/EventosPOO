@@ -7,20 +7,9 @@ public class Local {
     private String nome;
     private String endereco;
 
-    public Local(int id, String nome, String endereco) {
-        try {
-            if(id < 0) {
-                throw new LocalException.InvalidIdException("Email negativo é inválido");
-            }
-            if (nome == null || nome.isEmpty()) {
-                throw new LocalException.InvalidNomeException("Nome não pode ser nulo.");
-            }
-            if (endereco == null || endereco.isEmpty()) {
-                throw new LocalException.InvalidEnderecoException("Endereço não pode ser nulo");
-            }
-        } catch (LocalException.InvalidIdException | LocalException.InvalidNomeException | LocalException.InvalidEnderecoException e) { // botar um if aki
-            System.out.println("Erro ao criar o local: " + e.getMessage());
-        }
+    public Local(String nome, String endereco) {
+        setNome(nome); 
+        setEndereco(endereco); 
     }
 
     public int getId() {

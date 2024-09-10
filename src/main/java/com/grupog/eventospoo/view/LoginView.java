@@ -22,7 +22,7 @@ public class LoginView {
         stage.initOwner(ownerStage);
         stage.setTitle("Login");
         stage.setScene(loginScene);
-        stage.initModality(javafx.stage.Modality.WINDOW_MODAL);  // Optional: Makes the login window modal
+        stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
     }
 
     public void show() {

@@ -11,33 +11,13 @@ public class Evento {
     private String hora;
     private Local localizacao;
 
-    public Evento(int id, String nome, String descricao, Date data, String hora, Local localizacao) {
-        try {
-            if (id <= 0) {
-                throw new EventoException.InvalidIdException("ID inválido. Deve ser maior que zero.");
-            }
-            if (nome == null || nome.trim().isEmpty()) {
-                throw new EventoException.InvalidNomeException("Nome não pode ser nulo ou vazio.");
-            }
-            if (data == null) {
-                throw new EventoException.InvalidDataException("Data não pode ser nula.");
-            }
-            if (hora == null || hora.trim().isEmpty()) {
-                throw new EventoException.InvalidHoraException("Hora não pode ser nula ou vazia.");
-            }
-            if (localizacao == null) {
-                throw new EventoException.InvalidLocalizacaoException("Localização não pode ser nula.");
-            }
-    
-            this.id = id;
-            this.nome = nome;
-            this.descricao = descricao;
-            this.data = data;
-            this.hora = hora;
-            this.localizacao = localizacao;
-        } catch (EventoException.InvalidIdException | EventoException.InvalidNomeException | EventoException.InvalidDataException | EventoException.InvalidHoraException | EventoException.InvalidLocalizacaoException e) {
-            System.out.println("Erro ao criar o evento: " + e.getMessage());
-        }
+
+    public Evento(String nome, String descricao, Date data, String hora, Local localizacao) throws EventoException.InvalidIdException, EventoException.InvalidNomeException, EventoException.InvalidDataException, EventoException.InvalidHoraException, EventoException.InvalidLocalizacaoException {
+        setNome(nome);
+        setDescricao(descricao);
+        setData(data);
+        setHora(hora);
+        setLocalizacao(localizacao);
     }
     
 

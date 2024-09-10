@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.model;
 
+import java.util.ArrayList;
 import com.grupog.eventospoo.utils.exceptions.UsuarioException;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class Usuario {
         setSenha(senha);
         setEmail(email);
         setTipoUsuario(tipoUsuario);
+        this.eventosInscritos = new ArrayList<>();
     }
 
     public void setEventosInscritos(List<Evento> eventosInscritos) {
@@ -115,7 +117,7 @@ public class Usuario {
         }
     }
 
-    public void cancelarInscricao(Evento evento) {
+    public void desinscreverDoEvento(Evento evento) {
         try {
             if (!this.eventosInscritos.contains(evento)) {
                 throw new UsuarioException.EventoNaoEncontradoException("Evento não encontrado na lista de inscritos.");

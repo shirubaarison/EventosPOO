@@ -7,8 +7,7 @@ public class Local {
     private String nome;
     private String endereco;
 
-    public Local(int id, String nome, String endereco) {
-        setId(id); 
+    public Local(String nome, String endereco) {
         setNome(nome); 
         setEndereco(endereco); 
     }

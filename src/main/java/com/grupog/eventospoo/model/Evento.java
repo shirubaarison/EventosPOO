@@ -11,8 +11,7 @@ public class Evento {
     private String hora;
     private Local localizacao;
 
-    public Evento(int id, String nome, String descricao, Date data, String hora, Local localizacao) throws EventoException.InvalidIdException, EventoException.InvalidNomeException, EventoException.InvalidDataException, EventoException.InvalidHoraException, EventoException.InvalidLocalizacaoException {
-        setId(id);
+    public Evento(String nome, String descricao, Date data, String hora, Local localizacao) throws EventoException.InvalidIdException, EventoException.InvalidNomeException, EventoException.InvalidDataException, EventoException.InvalidHoraException, EventoException.InvalidLocalizacaoException {
         setNome(nome);
         setDescricao(descricao);
         setData(data);

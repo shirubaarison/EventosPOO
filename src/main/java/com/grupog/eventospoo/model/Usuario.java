@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.model;
 
+import java.util.ArrayList;
 import com.grupog.eventospoo.utils.exceptions.UsuarioException;
 import java.util.List;
 

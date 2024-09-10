@@ -1,6 +1,6 @@
 package com.grupog.eventospoo.utils.exceptions;
 
-public class AtividadeException extends RuntimeException {
+public class AtividadeException extends Exception {
     public AtividadeException(String message) {
         super(message);
     }

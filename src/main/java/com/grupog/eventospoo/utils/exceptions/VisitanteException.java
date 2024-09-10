@@ -1,6 +1,6 @@
 package com.grupog.eventospoo.utils.exceptions;
 
-public class VisitanteException extends RuntimeException {
+public class VisitanteException extends Exception {
     public VisitanteException(String message) {
         super(message);
     }

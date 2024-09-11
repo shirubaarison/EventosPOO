@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -26,8 +27,6 @@
         <menus>
           <Menu mnemonicParsing="false" text="Conta">
             <items>
-               <MenuItem mnemonicParsing="false" text="Alterar nome" />
-               <MenuItem mnemonicParsing="false" text="Alterar senha" />
                <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Sair" />
             </items>
           </Menu>
@@ -107,6 +106,59 @@
                         </children>
                     </AnchorPane>
                 </content>
+            </Tab>
+            <Tab fx:id="organizadorTab" disable="true" text="Organizador" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+                <content>
+                    <VBox fx:id="organizadorLayout" spacing="10">
+                        <!-- Seção de adicionar evento -->
+                        <VBox fx:id="addEventForm" spacing="5">
+                            <Label text="Adicionar Evento" />
+
+                            <TextField fx:id="eventNameFieldInput" promptText="Nome do Evento" />
+                            <TextField fx:id="eventLocationFieldInput" promptText="Local do Evento" />
+                            <TextField fx:id="eventDateFieldInput" promptText="Data do Evento (dd/MM/yyyy)" />
+                            <TextField fx:id="eventTimeFieldInput" promptText="Hora do Evento (HH:mm)" />
+                            <TextField fx:id="eventDescriptionFieldInput" promptText="Descrição do Evento" />
+
+                            <Button fx:id="addEventButton" text="Adicionar Evento" />
+                        </VBox>
+
+                        <!-- Seção para remover evento -->
+                        <VBox fx:id="removeEventSection" spacing="5">
+                            <Label text="Remover Evento" />
+
+                            <ListView fx:id="eventosListView" />
+
+                            <Button fx:id="removeEventButton" text="Remover Evento" />
+                        </VBox>
+                    </VBox>
+                </content>
+            </Tab>
+            <Tab fx:id="organizadorTab1" disable="true" text="Atividades">
+               <content>
+                  <VBox fx:id="organizadorLayout1" spacing="10">
+                     <children>
+                        <VBox fx:id="addEventForm1" spacing="5">
+                           <children>
+                              <Label text="Adicionar Evento" />
+                              <TextField fx:id="eventNameFieldInput1" promptText="Nome do Evento" />
+                              <TextField fx:id="eventLocationFieldInput1" promptText="Local do Evento" />
+                              <TextField fx:id="eventDateFieldInput1" promptText="Data do Evento (dd/MM/yyyy)" />
+                              <TextField fx:id="eventTimeFieldInput1" promptText="Hora do Evento (HH:mm)" />
+                              <TextField fx:id="eventDescriptionFieldInput1" promptText="Descrição do Evento" />
+                              <Button fx:id="addEventButton1" text="Adicionar Evento" />
+                           </children>
+                        </VBox>
+                        <VBox fx:id="removeEventSection1" spacing="5">
+                           <children>
+                              <Label text="Remover Evento" />
+                              <ListView fx:id="eventosListView1" />
+                              <Button fx:id="removeEventButton1" text="Remover Evento" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </VBox>
+               </content>
             </Tab>
         </tabs>
       </TabPane>

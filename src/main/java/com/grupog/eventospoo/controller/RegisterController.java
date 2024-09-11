@@ -4,6 +4,7 @@ import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.TipoUsuario;
 import com.grupog.eventospoo.model.Usuario;
+import com.grupog.eventospoo.utils.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -75,6 +76,8 @@ public class RegisterController {
         // Fechar essa janela e limpar
         Stage stage = (Stage) nomeUsuario.getScene().getWindow();
         stage.close();
+
+        AlertUtils.showAlert(Alert.AlertType.CONFIRMATION, "Conta criada", "Sua conta foi registrada com sucesso!");
 
         email.clear();
         nomeUsuario.clear();

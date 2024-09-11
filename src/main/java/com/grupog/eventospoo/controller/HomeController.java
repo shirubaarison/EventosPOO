@@ -3,13 +3,11 @@ package com.grupog.eventospoo.controller;
 import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.Usuario;
-import com.grupog.eventospoo.view.DashboardView;
-import com.grupog.eventospoo.view.LoginView;
-import com.grupog.eventospoo.view.RegisterView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -30,7 +28,7 @@ public class HomeController {
         systemModel.usuarioLogadoProperty().addListener((_, _, novoUsuarioLogado) -> {
             if (novoUsuarioLogado != null) {
                 try {
-                    showDashboard(novoUsuarioLogado);
+                    showDashboard();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -44,24 +42,52 @@ public class HomeController {
     @FXML
     private void handleLogin() throws IOException {
         // Mostrar a view de Login como modal (tela que pode fechar)
-        LoginView loginView = new LoginView(primaryStage);
-        loginView.show();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/LoginView.fxml"));
+        Parent root = loader.load();
+
+        Scene loginScene = new Scene(root);
+
+        Stage stage = new Stage();
+        stage.initOwner(primaryStage);
+        stage.setTitle("Login");
+        stage.setScene(loginScene);
+
+        stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+        stage.show();
     }
 
     @FXML
     private void handleRegister(ActionEvent event) throws IOException {
         // Mostrar a view de registro como modal (tela que pode fechar)
-        RegisterView registerView = new RegisterView(primaryStage);
-        registerView.show();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/RegisterView.fxml"));
+        Parent root = loader.load();
+
+        Scene loginScene = new Scene(root);
+
+        Stage stage = new Stage();
+        stage.initOwner(primaryStage);
+        stage.setTitle("Login");
+        stage.setScene(loginScene);
+
+        stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
+        stage.show();
     }
 
 
     // Troca a tela pro dashboard após usuário ter logado
-    private void showDashboard(Usuario usuarioConectado) throws IOException {
-        DashboardView dashboardView = new DashboardView(usuarioConectado);
-        primaryStage.setScene(dashboardView.getScene());
-    }
+    private void showDashboard() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/dashboard/DashboardView.fxml"));
 
+        // Carregar o FXML correspondente
+        Parent root = loader.load();
+
+        Scene dashboardScene = new Scene(root);
+
+        // Configurar e exibir a nova tela
+        this.primaryStage.setScene(dashboardScene);
+    }
 
     // Sair
     @FXML

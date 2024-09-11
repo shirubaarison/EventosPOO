@@ -46,6 +46,8 @@ public class SystemModel {
         addUsuario(new Usuario("caska de bala", "11312312343", "UFBA", PasswordUtils.hashPassword("22"), "caska@gmail.com", TipoUsuario.ORGANIZADOR));
         addUsuario(new Usuario("borabill", "12312312343", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com", TipoUsuario.AUTOR));
 
+        addUsuario(new Usuario("a", "12312312343", "UFC", PasswordUtils.hashPassword("1"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
+
         // Inicializa com eventos padrão
         addEvento(new Evento("SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local("UFC Campus Russas", "Rua Universitária")));
         addEvento(new Evento("Torneio de Baladeira", "Valendo 2 milhões", new Date(), "01:00", new Local("Figuereido", "Figuereido")));

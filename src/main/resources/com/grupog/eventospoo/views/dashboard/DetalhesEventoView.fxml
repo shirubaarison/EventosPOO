@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="257.0" prefWidth="320.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grupog.eventospoo.controller.EventoDetailsController">
+   <VBox layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="294.0" spacing="8.0">
+      <children>
+          <Label fx:id="eventNameLabel" alignment="CENTER_RIGHT" prefHeight="16.0" text="Nome: " />
+          <Label fx:id="eventLocationLabel" alignment="CENTER_RIGHT" text="Localização: " />
+          <Label fx:id="eventTimeLabel" alignment="CENTER_RIGHT" text="Hora: " />
+          <Label fx:id="eventDescriptionLabel" alignment="CENTER_RIGHT" text="Descrição: " wrapText="true" />
+      </children>
+   </VBox>
+    <Button fx:id="inscricaoButton" layoutX="83.0" layoutY="184.0" onAction="#handleInscricao" prefHeight="30.0" prefWidth="155.0" text="Se inscrever" />
+   <padding>
+      <Insets left="10.0" />
+   </padding>
+</AnchorPane>

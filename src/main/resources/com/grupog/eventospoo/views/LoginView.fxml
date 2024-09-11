@@ -28,6 +28,6 @@
             <Insets left="16.0" right="16.0" />
          </padding>
       </VBox>
-      <Button layoutX="552.0" layoutY="387.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="24.0" prefWidth="81.0" style="-fx-background-color: white;" text="Entrar" />
+      <Button defaultButton="true" layoutX="552.0" layoutY="387.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="24.0" prefWidth="81.0" style="-fx-background-color: white;" text="Entrar" />
    </children>
 </AnchorPane>

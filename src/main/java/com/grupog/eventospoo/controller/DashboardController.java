@@ -3,11 +3,12 @@ package com.grupog.eventospoo.controller;
 import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.*;
 import com.grupog.eventospoo.utils.AlertUtils;
-import com.grupog.eventospoo.view.HomeView;
-import javafx.application.Platform;
 import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -23,9 +24,33 @@ import java.util.Date;
 import java.util.Map;
 
 public class DashboardController {
-    // sabemos que tem muito codigo que era pra estar na view, perdao :(
+    @FXML
+    private TextField eventDateFieldInput;
 
-    // Componentes da interface gráfica
+    @FXML
+    private TextField eventTimeFieldInput;
+
+    @FXML
+    private TextField eventDescriptionFieldInput;
+
+    @FXML
+    private Button addEventButton;
+
+    @FXML
+    private ListView<String> eventosListView;
+
+    @FXML
+    private Button removeEventButton;
+
+    @FXML
+    private TextField eventNameFieldInput;
+
+    @FXML
+    private TextField eventLocationFieldInput;
+
+    @FXML
+    private Tab organizadorTab;
+
     @FXML
     private Text boasVindas;
 
@@ -152,7 +177,8 @@ public class DashboardController {
             Label localizacaoEvento = new Label("Local: " + evento.getLocalizacao().getNome());
             Label horaEvento = new Label("Hora: " + evento.getHora());
 
-            Button verMaisButao = getDetalhesEventoButton(evento);
+            Button verMaisButao = new Button("Ver detalhes");
+            verMaisButao.setOnAction(e -> showEventoDetails(evento));
 
             VBox eventoContainer = new VBox();
             eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
@@ -169,62 +195,36 @@ public class DashboardController {
         }
     }
 
-    private Button getDetalhesEventoButton(Evento evento) {
-        // Cria um botão para visualizar detalhes do evento
-        Button verMaisButao = new Button("Ver Detalhes");
+    // Carregar view dos detalhes do evento
+    private EventHandler<ActionEvent> showEventoDetails(Evento evento) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/dashboard/DetalhesEventoView.fxml"));
+            Parent root = loader.load();
 
-        verMaisButao.setOnAction(e -> {
-            // Cria uma nova janela para exibir detalhes do evento
+            Scene detailEventoScene = new Scene(root);
+
             Stage detailsStage = new Stage();
+            detailsStage.setScene(detailEventoScene);
+
+            detailsStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
+
             detailsStage.setTitle("Detalhes do Evento");
 
-            VBox detailsLayout = new VBox(10);
-            detailsLayout.setPadding(new Insets(10));
+            EventoDetailsController controller = loader.getController();
+            controller.setEvento(evento);
 
-            Label detailsNameLabel = new Label("Nome: " + evento.getNome());
-            Label detailsLocationLabel = new Label("Localização: " + evento.getLocalizacao().getNome());
-            Label detailsTimeLabel = new Label("Hora: " + evento.getHora());
-            Label detailsDescriptionLabel = new Label("Descrição: " + evento.getDescricao());
+            controller.setStage(detailsStage);
 
-            detailsLayout.getChildren().addAll(detailsNameLabel, detailsLocationLabel, detailsTimeLabel, detailsDescriptionLabel);
-
-            Scene detailsScene = new Scene(detailsLayout, 300, 200);
-            Button inscricaoButton = getInscricaoButton(evento, detailsStage);
-            detailsLayout.getChildren().add(inscricaoButton);
-            detailsStage.setScene(detailsScene);
             detailsStage.show();
-        });
 
-        return verMaisButao;
-    }
-
-    private Button getInscricaoButton(Evento evento, Stage detailsStage) {
-        // Cria um botão para inscrição/desinscrição no evento
-        Button inscricaoButton = new Button();
-
-        boolean isSubscribed = systemModel.getEventosInscritos().containsValue(evento);
-        inscricaoButton.setText(isSubscribed ? "Desinscrever" : "Se inscrever");
-
-        inscricaoButton.setOnAction(inscricaoEvent -> {
-            if (isSubscribed) {
-                // Desinscreve do evento
-                System.out.println("Desinscrevendo evento: " + evento.getNome());
-                systemModel.desinscrever(evento);
-            } else {
-                // Inscreve no evento
-                System.out.println("Inscrevendo no evento: " + evento.getNome());
-                systemModel.inscrever(evento);
-            }
-
-            // Atualiza o status do botão e fecha a janela após a ação
-            Platform.runLater(() -> {
-                boolean updatedSubscribedStatus = systemModel.getEventosInscritos().containsValue(evento);
-                inscricaoButton.setText(updatedSubscribedStatus ? "Desinscrever" : "Se inscrever");
-                detailsStage.close();
-            });
-        });
-
-        return inscricaoButton;
+            // Estava aparecendo sem foco
+            detailsStage.toFront();
+            detailsStage.requestFocus();
+            detailsStage.setIconified(false);
+        } catch (UsuarioException | IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     private void carregarEventosInscritos() {
@@ -249,7 +249,8 @@ public class DashboardController {
             Label nomeEvento = new Label(evento.getNome());
             Label localizacaoEvento = new Label("Local: " + evento.getLocalizacao().getNome());
             Label horaEvento = new Label("Hora: " + evento.getHora());
-            Button verMaisButao = getDetalhesEventoButton(evento);
+            Button verMaisButao = new Button("Ver mais");
+            verMaisButao.setOnAction(showEventoDetails(evento));
 
             VBox eventoContainer = new VBox();
             eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
@@ -286,39 +287,15 @@ public class DashboardController {
 
     private void setupOrganizador() {
         // Configura a aba do organizador
-        Tab organizadorTab = new Tab("Organização");
-
-        VBox organizadorLayout = new VBox(10);
-        organizadorLayout.setPadding(new Insets(10));
-
-        // Seção de adicionar evento
-        Label addEventLabel = new Label("Adicionar Evento");
-
-        // Campos para detalhes do evento
-        TextField eventNameField = new TextField();
-        eventNameField.setPromptText("Nome do Evento");
-
-        TextField eventLocationField = new TextField();
-        eventLocationField.setPromptText("Local do Evento");
-
-        TextField eventDateField = new TextField();
-        eventDateField.setPromptText("Data do Evento (dd/MM/yyyy)");
-
-        TextField eventTimeField = new TextField();
-        eventTimeField.setPromptText("Hora do Evento (HH:mm)");
-
-        TextField eventDescriptionField = new TextField();
-        eventDescriptionField.setPromptText("Descrição do Evento");
-
-        Button addEventButton = new Button("Adicionar Evento");
+        organizadorTab.setDisable(false);
 
         addEventButton.setOnAction(e -> {
             // Adiciona um novo evento ao sistema
-            String eventName = eventNameField.getText();
-            String eventLocation = eventLocationField.getText();
-            String eventDate = eventDateField.getText();
-            String eventTime = eventTimeField.getText();
-            String eventDescription = eventDescriptionField.getText();
+            String eventName = eventNameFieldInput.getText();
+            String eventLocation = eventLocationFieldInput.getText();
+            String eventDate = eventDateFieldInput.getText();
+            String eventTime = eventTimeFieldInput.getText();
+            String eventDescription = eventDescriptionFieldInput.getText();
 
             // Validação dos campos
             if (eventName.isEmpty() || eventLocation.isEmpty() || eventDate.isEmpty() || eventTime.isEmpty() || eventDescription.isEmpty()) {
@@ -340,24 +317,18 @@ public class DashboardController {
             systemModel.addEvento(newEvent);
 
             // Limpa os campos após adicionar o evento
-            eventNameField.clear();
-            eventLocationField.clear();
-            eventDateField.clear();
-            eventTimeField.clear();
-            eventDescriptionField.clear();
+            eventNameFieldInput.clear();
+            eventLocationFieldInput.clear();
+            eventDateFieldInput.clear();
+            eventTimeFieldInput.clear();
+            eventDescriptionFieldInput.clear();
         });
 
-        VBox addEventForm = new VBox(5, addEventLabel, eventNameField, eventLocationField, eventDateField, eventTimeField, eventDescriptionField, addEventButton);
-
         // Seção para remover evento
-        Label removeEventLabel = new Label("Remover Evento");
-
-        ListView<String> eventosListView = new ListView<>();
         eventosListView.getItems().addAll(systemModel.getEventos().keySet());
 
-        Button removeEventButton = new Button("Remover Evento");
         removeEventButton.setOnAction(e -> {
-            String selectedEvent = eventosListView.getSelectionModel().getSelectedItem();
+            String selectedEvent = (String) eventosListView.getSelectionModel().getSelectedItem();
             if (selectedEvent != null) {
                 systemModel.removerEvento(selectedEvent);
                 eventosListView.getItems().remove(selectedEvent);
@@ -371,14 +342,6 @@ public class DashboardController {
             eventosListView.getItems().clear();
             eventosListView.getItems().addAll(systemModel.getEventos().keySet());
         });
-
-        VBox removeEventSection = new VBox(5, removeEventLabel, eventosListView, removeEventButton);
-
-        organizadorLayout.getChildren().addAll(addEventForm, removeEventSection);
-        organizadorTab.setContent(organizadorLayout);
-
-        // Adiciona a aba do organizador ao painel de abas
-        tab.getTabPane().getTabs().add(organizadorTab);
     }
 
     private void setupAutor() {
@@ -394,9 +357,8 @@ public class DashboardController {
         Stage stage = (Stage) boasVindas.getScene().getWindow();
         stage.close();
 
-        // Abre a tela inicial
-        Stage newStage = new Stage();
-        new HomeView(newStage);
+        // Volta pra tela inicial
+        //
     }
 
     @FXML

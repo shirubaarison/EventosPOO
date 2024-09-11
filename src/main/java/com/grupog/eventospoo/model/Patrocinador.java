@@ -1,16 +1,29 @@
 package com.grupog.eventospoo.model;
 
-import com.grupog.eventospoo.utils.exceptions.PatrocinadorException;
+import com.grupog.eventospoo.exceptions.PatrocinadorException;
 
+/**
+ * Representa um patrocinador que contribui para eventos.
+ */
 public class Patrocinador {
     private int id;
     private String nome;
     private double contribuicao;
 
+    /**
+     * Obtém o ID do patrocinador.
+     *
+     * @return O ID do patrocinador
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Define o ID do patrocinador.
+     *
+     * @param id O ID a ser definido
+     */
     public void setId(int id) {
         try {
             if (id < 0) {
@@ -22,10 +35,20 @@ public class Patrocinador {
         }
     }
 
+    /**
+     * Obtém o nome do patrocinador.
+     *
+     * @return O nome do patrocinador
+     */
     public String getNome() {
         return nome;
     }
 
+    /**
+     * Define o nome do patrocinador.
+     *
+     * @param nome O nome a ser definido
+     */
     public void setNome(String nome) {
         try {
             if (nome == null || nome.trim().isEmpty()) {
@@ -37,10 +60,20 @@ public class Patrocinador {
         }
     }
 
+    /**
+     * Obtém a contribuição do patrocinador.
+     *
+     * @return A contribuição do patrocinador
+     */
     public double getContribuicao() {
         return contribuicao;
     }
 
+    /**
+     * Define a contribuição do patrocinador.
+     *
+     * @param contribuicao A contribuição a ser definida
+     */
     public void setContribuicao(double contribuicao) {
         try {
             if (contribuicao < 0) {

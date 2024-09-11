@@ -31,7 +31,6 @@ public class DashboardView {
         Parent root = loader.load();
 
         scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
     }
 
     public Scene getScene() {

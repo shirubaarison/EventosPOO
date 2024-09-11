@@ -1,4 +1,4 @@
-package com.grupog.eventospoo.utils.exceptions;
+package com.grupog.eventospoo.exceptions;
 
 public class LocalException extends Exception {
     public LocalException(String message) {

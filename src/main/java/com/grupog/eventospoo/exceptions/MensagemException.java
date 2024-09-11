@@ -1,4 +1,4 @@
-package com.grupog.eventospoo.utils.exceptions;
+package com.grupog.eventospoo.exceptions;
 
 public class MensagemException extends Exception {
     public MensagemException(String message) {
@@ -9,7 +9,6 @@ public class MensagemException extends Exception {
         super(message, cause);
     }
 
-    
     public static class MensagemInvalidaException extends MensagemException {
         public MensagemInvalidaException(String message) {
             super(message);
@@ -36,6 +35,11 @@ public class MensagemException extends Exception {
             super(message);
         }
     }
+
+    public static class InvalidTexto extends MensagemException {
+        public InvalidTexto(String message) { super(message); }
+    }
+
 }
 
 

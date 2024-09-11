@@ -32,7 +32,7 @@
                     <font>
                         <Font size="16.0" />
                     </font></Text>
-                <TextField fx:id="cpf" prefWidth="221.0" promptText="XXX.XXX.XXXX-XX" />
+                <TextField fx:id="cpf" prefWidth="221.0" promptText="XXXXXXXXXXXX" />
                 <Text id="email" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Instituiçao">
                     <font>
                         <Font size="16.0" />

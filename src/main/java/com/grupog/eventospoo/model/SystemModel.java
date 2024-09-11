@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.model;
 
+import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.utils.PasswordUtils;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,40 +10,76 @@ import javafx.collections.ObservableMap;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+/**
+ * Singleton que gerencia a aplicação, incluindo usuários, eventos e avaliações.
+ * Garante que há apenas uma instância de SystemModel na aplicação.
+ */
 public class SystemModel {
+    // Instância única do SystemModel (Singleton)
     private static SystemModel instance;
 
+    // Armazena usuários com o nome como chave
     private final Map<String, Usuario> usuarios = new HashMap<>();
+
+    // Armazena eventos com o nome como chave, utilizando ObservableMap para suporte a mudanças
     private final ObservableMap<String, Evento> eventos = FXCollections.observableHashMap();
+
+    // Propriedade que armazena o usuário atualmente logado
     private final ObjectProperty<Usuario> usuarioLogado = new SimpleObjectProperty<>();
+
+    // Armazena eventos aos quais o usuário logado está inscrito
     private final ObservableMap<String, Evento> eventosInscritos = FXCollections.observableHashMap();
+
+    // Lista observável de avaliações
     private final ObservableList<Avaliacao> avaliacoes = FXCollections.observableArrayList();
 
-    public SystemModel() {
-        // Inicializa com usuários
+    /**
+     * Construtor da classe. Inicializa com alguns usuários e eventos padrão.
+     *
+     * @throws UsuarioException Se ocorrer algum erro ao criar usuários
+     */
+    public SystemModel() throws UsuarioException {
+        // Inicializa com usuários padrão
         addUsuario(new Usuario("amostradinho", "123.123.123-43", "UFC", PasswordUtils.hashPassword("123"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
         addUsuario(new Usuario("caska de bala", "113.123.123-43", "UFBA", PasswordUtils.hashPassword("22"), "caska@gmail.com", TipoUsuario.ORGANIZADOR));
         addUsuario(new Usuario("borabill", "123.123.123-43", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com", TipoUsuario.AUTOR));
 
-        // Inicializar com eventos
+        // Inicializa com eventos padrão
         addEvento(new Evento("SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local("UFC Campus Russas", "Rua Universitária")));
         addEvento(new Evento("Torneio de Baladeira", "Valendo 2 milhões", new Date(), "01:00", new Local("Figuereido", "Figuereido")));
     }
 
-    public static SystemModel getInstance() {
+    /**
+     * Obtém a instância única do SystemModel (Singleton).
+     *
+     * @return A instância única do SystemModel
+     * @throws UsuarioException Se ocorrer algum erro ao inicializar o SystemModel
+     */
+    public static SystemModel getInstance() throws UsuarioException {
         if (instance == null) {
             instance = new SystemModel();
         }
         return instance;
     }
 
+    /**
+     * Obtém um usuário pelo nome.
+     *
+     * @param nome O nome do usuário
+     * @return O usuário correspondente ao nome
+     */
     public Usuario getUsuario(String nome) {
         return usuarios.get(nome);
     }
 
+    /**
+     * Adiciona um novo usuário ao sistema.
+     *
+     * @param user O usuário a ser adicionado
+     * @throws IllegalArgumentException Se o usuário for nulo
+     */
     public void addUsuario(Usuario user) {
         if (user != null) {
             this.usuarios.put(user.getNome(), user);
@@ -51,6 +88,12 @@ public class SystemModel {
         }
     }
 
+    /**
+     * Adiciona um novo evento ao sistema.
+     *
+     * @param evento O evento a ser adicionado
+     * @throws IllegalArgumentException Se o evento for nulo
+     */
     public void addEvento(Evento evento) {
         if (evento != null) {
             this.eventos.put(evento.getNome(), evento);
@@ -59,34 +102,76 @@ public class SystemModel {
         }
     }
 
+    /**
+     * Obtém todos os usuários do sistema.
+     *
+     * @return Um mapa de usuários
+     */
     public Map<String, Usuario> getUsuarios() {
         return usuarios;
     }
 
+    /**
+     * Obtém todos os eventos do sistema.
+     *
+     * @return Um mapa observável de eventos
+     */
     public ObservableMap<String, Evento> getEventos() {
         return eventos;
     }
 
+    /**
+     * Obtém todos os eventos aos quais o usuário logado está inscrito.
+     *
+     * @return Um mapa observável de eventos inscritos
+     */
     public ObservableMap<String, Evento> getEventosInscritos() {
         return eventosInscritos;
     }
 
+    /**
+     * Obtém o usuário atualmente logado.
+     *
+     * @return O usuário logado
+     */
     public Usuario getUsuarioLogado() {
         return usuarioLogado.get();
     }
 
+    /**
+     * Define o usuário logado.
+     *
+     * @param usuario O usuário a ser definido como logado
+     */
     public void setUsuarioLogado(Usuario usuario) {
         this.usuarioLogado.set(usuario);
     }
 
+    /**
+     * Realiza o logout do usuário atualmente logado e limpa os eventos inscritos
+     */
     public void logout() {
         setUsuarioLogado(null);
+
+        eventosInscritos.clear();
     }
 
+    /**
+     * Propriedade do usuário logado.
+     *
+     * @return A propriedade do usuário logado
+     */
     public ObjectProperty<Usuario> usuarioLogadoProperty() {
         return usuarioLogado;
     }
 
+    /**
+     * Realiza o login de um usuário.
+     *
+     * @param nome O nome do usuário
+     * @param senha A senha do usuário
+     * @return true se o login for bem-sucedido, false caso contrário
+     */
     public boolean login(String nome, String senha) {
         Usuario usuario = usuarios.get(nome);
 
@@ -100,16 +185,26 @@ public class SystemModel {
         return false;
     }
 
+    /**
+     * Inscreve o usuário logado em um evento.
+     *
+     * @param evento O evento no qual o usuário deseja se inscrever
+     */
     public void inscrever(Evento evento) {
-        if (evento == null) return; // Optionally throw exception
+        if (evento == null) return; // Não faz nada se o evento for nulo
 
         Usuario usuarioConectado = getUsuarioLogado();
-        if (usuarioConectado == null) return; // Handle case where no user is logged in
+        if (usuarioConectado == null) return; // Não faz nada se nenhum usuário estiver logado
 
         usuarioConectado.inscreverNoEvento(evento);
         eventosInscritos.put(evento.getNome(), evento);
     }
 
+    /**
+     * Desinscreve o usuário logado de um evento.
+     *
+     * @param evento O evento do qual o usuário deseja se desinscrever
+     */
     public void desinscrever(Evento evento) {
         if (evento == null) return;
 
@@ -120,13 +215,18 @@ public class SystemModel {
         eventosInscritos.remove(evento.getNome());
     }
 
+    /**
+     * Remove um evento do sistema.
+     *
+     * @param evento O evento a ser removido
+     * @throws IllegalArgumentException Se o evento for nulo
+     */
     public void removerEvento(Evento evento) {
         if (evento == null) {
             throw new IllegalArgumentException("Tentativa de remover evento nulo");
         }
 
         eventos.remove(evento.getNome());
-
         eventosInscritos.remove(evento.getNome());
 
         for (Usuario usuario : usuarios.values()) {
@@ -138,27 +238,46 @@ public class SystemModel {
         System.out.println("Evento " + evento.getNome() + " removido com sucesso.");
     }
 
+    /**
+     * Remove um evento pelo nome.
+     *
+     * @param nome O nome do evento a ser removido
+     * @throws IllegalArgumentException Se o evento não for encontrado
+     */
     public void removerEvento(String nome) {
-        // Find the event by its name
         Evento evento = eventos.get(nome);
 
-        // If the event doesn't exist, throw an exception
         if (evento == null) {
             throw new IllegalArgumentException("Tentativa de remover evento inexistente: " + nome);
         }
 
-        // Proceed with the same logic as in removerEvento(Evento evento)
         removerEvento(evento);
     }
 
+    /**
+     * Adiciona uma avaliação ao sistema.
+     *
+     * @param avaliacao A avaliação a ser adicionada
+     */
     public void addAvaliacao(Avaliacao avaliacao) {
         avaliacoes.add(avaliacao);
     }
 
+    /**
+     * Obtém todas as avaliações.
+     *
+     * @return Uma lista observável de avaliações
+     */
     public ObservableList<Avaliacao> getAvaliacoes() {
         return avaliacoes;
     }
 
+    /**
+     * Obtém todas as avaliações para um evento específico.
+     *
+     * @param evento O evento para o qual as avaliações devem ser retornadas
+     * @return Uma lista observável de avaliações para o evento
+     */
     public ObservableList<Avaliacao> getAvaliacoesByEvento(Evento evento) {
         ObservableList<Avaliacao> result = FXCollections.observableArrayList();
         for (Avaliacao avaliacao : avaliacoes) {

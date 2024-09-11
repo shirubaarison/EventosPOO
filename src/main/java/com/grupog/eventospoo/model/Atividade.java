@@ -1,25 +1,41 @@
 package com.grupog.eventospoo.model;
 
-import com.grupog.eventospoo.utils.exceptions.AtividadeException;
+import com.grupog.eventospoo.exceptions.AtividadeException;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Representa uma atividade em um sistema de eventos.
+ * A atividade possui um identificador, um título, um tipo, um horário, um autor,
+ * avaliações, e um status de conclusão e cancelamento.
+ */
 public class Atividade {
     private int id;
     private String titulo;
     private TipoAtividade tipo;
     private final LocalDate horario = LocalDate.now();
     private Autor autor;
-    private List<Avaliacao> avaliacoes = new ArrayList<>();
+    private final List<Avaliacao> avaliacoes = new ArrayList<>();
     private boolean concluido = false;
     private boolean cancelado = false;
 
+    /**
+     * Retorna o identificador da atividade.
+     *
+     * @return ID da atividade
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Define o identificador da atividade.
+     * O ID deve ser maior que zero.
+     *
+     * @param id Identificador da atividade
+     */
     public void setId(int id) {
         try {
             if (id <= 0) {
@@ -31,10 +47,21 @@ public class Atividade {
         }
     }
 
+    /**
+     * Retorna o título da atividade.
+     *
+     * @return Título da atividade
+     */
     public String getTitulo() {
         return titulo;
     }
 
+    /**
+     * Define o título da atividade.
+     * O título não pode ser nulo ou vazio.
+     *
+     * @param titulo Título da atividade
+     */
     public void setTitulo(String titulo) {
         try {
             if (titulo == null || titulo.isEmpty()) {
@@ -46,10 +73,21 @@ public class Atividade {
         }
     }
 
+    /**
+     * Retorna o tipo da atividade.
+     *
+     * @return Tipo da atividade
+     */
     public TipoAtividade getTipo() {
         return tipo;
     }
 
+    /**
+     * Define o tipo da atividade.
+     * O tipo não pode ser nulo.
+     *
+     * @param tipo Tipo da atividade
+     */
     public void setTipo(TipoAtividade tipo) {
         try {
             if (tipo == null) {
@@ -61,14 +99,30 @@ public class Atividade {
         }
     }
 
+    /**
+     * Retorna o autor da atividade.
+     *
+     * @return Autor da atividade
+     */
     public Autor getAutor() {
         return autor;
     }
 
+    /**
+     * Define o autor da atividade.
+     *
+     * @param autor Autor da atividade
+     */
     public void setAutor(Autor autor) {
         this.autor = autor;
     }
 
+    /**
+     * Adiciona uma avaliação à lista de avaliações da atividade.
+     * A avaliação não pode ser nula.
+     *
+     * @param av Avaliação a ser adicionada
+     */
     public void adicionarAvaliacao(Avaliacao av) {
         try {
             if (av == null) {
@@ -80,6 +134,10 @@ public class Atividade {
         }
     }
 
+    /**
+     * Marca a atividade como cancelada.
+     * Lança uma exceção se a atividade já estiver cancelada.
+     */
     public void cancelarAtividade() {
         try {
             if (cancelado) {
@@ -91,6 +149,10 @@ public class Atividade {
         }
     }
 
+    /**
+     * Marca a atividade como concluída.
+     * Lança uma exceção se a atividade já estiver concluída.
+     */
     public void concluirAtividade() {
         try {
             if (concluido) {
@@ -102,14 +164,29 @@ public class Atividade {
         }
     }
 
+    /**
+     * Retorna o horário de criação da atividade.
+     *
+     * @return Data e hora de criação da atividade
+     */
     public LocalDate getHorario() {
         return horario;
     }
 
+    /**
+     * Retorna a lista de avaliações da atividade.
+     *
+     * @return Lista de avaliações
+     */
     public List<Avaliacao> getAvaliacoes() {
         return avaliacoes;
     }
 
+    /**
+     * Retorna uma representação textual da atividade.
+     *
+     * @return Informações sobre a atividade
+     */
     public String getInformacoes() {
         return "Atividade{" +
                 "titulo='" + titulo + '\'' +

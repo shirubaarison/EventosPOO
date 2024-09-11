@@ -1,4 +1,4 @@
-package com.grupog.eventospoo.utils.exceptions;
+package com.grupog.eventospoo.exceptions;
 
 public class UsuarioException extends Exception {
     public UsuarioException(String message) {

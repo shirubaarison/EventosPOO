@@ -1,4 +1,4 @@
-package com.grupog.eventospoo.utils.exceptions;
+package com.grupog.eventospoo.exceptions;
 
 public class PatrocinadorException extends Exception {
     public PatrocinadorException(String message) {

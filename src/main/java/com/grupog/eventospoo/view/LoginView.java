@@ -12,16 +12,18 @@ public class LoginView {
     private final Stage stage;
 
     public LoginView(Stage ownerStage) throws IOException {
+        // carregar fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/LoginView.fxml"));
         Parent root = loader.load();
 
         Scene loginScene = new Scene(root);
-        loginScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles.css")).toExternalForm());
 
         stage = new Stage();
         stage.initOwner(ownerStage);
         stage.setTitle("Login");
         stage.setScene(loginScene);
+
+        // essa tela é modal, nao abre no display principal
         stage.initModality(javafx.stage.Modality.WINDOW_MODAL);
     }
 

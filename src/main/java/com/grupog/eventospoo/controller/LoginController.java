@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.controller;
 
+import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.SystemModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
@@ -17,7 +18,8 @@ public class LoginController {
     @FXML
     private PasswordField senha;
 
-    public void initialize() {
+    public void initialize() throws UsuarioException {
+        // Pegar instancia do SystemModel
         systemModel = SystemModel.getInstance();
     }
 
@@ -26,6 +28,7 @@ public class LoginController {
         String nome = nomeUsuario.getText().trim();
         String senhaValue = senha.getText().trim();
 
+        // Tentar fazer o login...
         if (systemModel.login(nome, senhaValue)) {
             // Fechar essa janela
             Stage stage = (Stage) nomeUsuario.getScene().getWindow();

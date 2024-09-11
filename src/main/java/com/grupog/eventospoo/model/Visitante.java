@@ -1,27 +1,44 @@
 package com.grupog.eventospoo.model;
 
-import com.grupog.eventospoo.utils.exceptions.VisitanteException;
-import com.grupog.eventospoo.utils.exceptions.UsuarioException;
-import com.grupog.eventospoo.utils.exceptions.VisitanteException;
+import com.grupog.eventospoo.exceptions.VisitanteException;
+import com.grupog.eventospoo.exceptions.UsuarioException;
 
+/**
+ * Representa um visitante no sistema, que é um tipo especializado de usuário.
+ * Visitantes podem fornecer feedback e obter informações sobre atividades.
+ */
 public class Visitante extends Usuario {
-    private int id;
-    private String feedback;
+    private int id; // Identificador único para o visitante
+    private String feedback; // Feedback fornecido pelo visitante
 
-    public Visitante(String nome, String cpf, String instituicao, String senha, String email) 
-            throws UsuarioException.InvalidNomeException, 
-                   UsuarioException.InvalidCpfException, 
-                   UsuarioException.InvalidInstituicaoException, 
-                   UsuarioException.InvalidSenhaException, 
-                   UsuarioException.InvalidEmailException, 
-                   UsuarioException.InvalidTipoUsuarioException {
+    /**
+     * Construtor da classe Visitante.
+     *
+     * @param nome          Nome do visitante
+     * @param cpf           CPF do visitante
+     * @param instituicao   Instituição do visitante
+     * @param senha         Senha do visitante
+     * @param email         Email do visitante
+     * @throws UsuarioException Exceções relacionadas à validação dos parâmetros
+     */
+    public Visitante(String nome, String cpf, String instituicao, String senha, String email) throws UsuarioException {
         super(nome, cpf, instituicao, senha, email, TipoUsuario.VISITANTE);
     }
 
+    /**
+     * Obtém o identificador do visitante.
+     *
+     * @return ID do visitante
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Define o identificador do visitante.
+     *
+     * @param id ID do visitante
+     */
     public void setId(int id) {
         try {
             if (id <= 0) {
@@ -33,10 +50,20 @@ public class Visitante extends Usuario {
         }
     }
 
+    /**
+     * Obtém o feedback fornecido pelo visitante.
+     *
+     * @return Feedback do visitante
+     */
     public String getFeedback() {
         return feedback;
     }
 
+    /**
+     * Define o feedback fornecido pelo visitante.
+     *
+     * @param feedback Feedback fornecido pelo visitante
+     */
     public void setFeedback(String feedback) {
         try {
             if (feedback == null || feedback.trim().isEmpty()) {
@@ -48,6 +75,12 @@ public class Visitante extends Usuario {
         }
     }
 
+    /**
+     * Obtém informações sobre uma atividade específica.
+     *
+     * @param atividade Atividade sobre a qual obter informações
+     * @return Informações da atividade
+     */
     public String obterInfoAtividade(Atividade atividade) {
         try {
             if (atividade == null) {
@@ -60,6 +93,12 @@ public class Visitante extends Usuario {
         }
     }
 
+    /**
+     * Envia feedback sobre uma atividade específica.
+     *
+     * @param atividade Atividade sobre a qual o feedback está sendo enviado
+     * @return true se o feedback for enviado com sucesso, false caso contrário
+     */
     public boolean enviarFeedback(Atividade atividade) {
         try {
             if (atividade == null) {
@@ -75,5 +114,4 @@ public class Visitante extends Usuario {
             return false;
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.controller;
 
+import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.TipoUsuario;
 import com.grupog.eventospoo.model.Usuario;
@@ -32,14 +33,16 @@ public class RegisterController {
     private ComboBox<TipoUsuario> tipoUsuario;
 
     @FXML
-    private void initialize() {
+    private void initialize() throws UsuarioException {
+        // Inicializar tipos de usuário (menu dropdown)
         tipoUsuario.getItems().addAll(TipoUsuario.VISITANTE, TipoUsuario.ORGANIZADOR, TipoUsuario.AUTOR);
 
+        // Instancia do SystemModel para fazer as devidas operações de registro
         systemModel = SystemModel.getInstance();
     }
 
     @FXML
-    private void handleRegistration() {
+    private void handleRegistration() throws UsuarioException {
         String emailValue = email.getText().trim();
         String nome = nomeUsuario.getText().trim();
         String senhaValue = senha.getText().trim();
@@ -59,6 +62,7 @@ public class RegisterController {
 
         if (!isValidEmail(emailValue)) {
             showAlert("Email inválido");
+            return;
         }
 
         // Dar hash na senha, não vamos salvar ela plana né...
@@ -80,12 +84,16 @@ public class RegisterController {
     }
 
     private boolean isValidCPF(String cpf) {
-        // implementar logica
-        return true;
+        // validador de cpf básico
+        return cpf != null && cpf.length() == 11 && cpf.matches("\\d+");
     }
 
     private boolean isValidEmail(String email) {
-        // implementar lógica
-        return true;
+        // validador de email com regex
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+        String emailRegex = "^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+        return email.matches(emailRegex);
     }
 }

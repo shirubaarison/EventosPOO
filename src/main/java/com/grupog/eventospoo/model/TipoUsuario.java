@@ -1,11 +1,21 @@
 package com.grupog.eventospoo.model;
 
+/**
+ * Enum que representa os diferentes tipos de usuários no sistema.
+ */
 public enum TipoUsuario {
-    VISITANTE,
-    ORGANIZADOR,
-    AUTOR;
+    VISITANTE,   // Usuário que apenas participa dos eventos
+    ORGANIZADOR, // Usuário que organiza eventos
+    AUTOR;       // Usuário que cria e publica conteúdo para os eventos
 
-    public static TipoUsuario fromString(String tipo) { // converte em string e verifica se o enum inserido é valido
+    /**
+     * Converte uma string para o tipo de usuário correspondente no enum.
+     *
+     * @param tipo A string representando o tipo de usuário
+     * @return O TipoUsuario correspondente à string fornecida
+     * @throws TipoUsuarioInvalidoException Se a string não corresponder a nenhum tipo de usuário válido
+     */
+    public static TipoUsuario fromString(String tipo) {
         try {
             return TipoUsuario.valueOf(tipo.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -14,6 +24,9 @@ public enum TipoUsuario {
         }
     }
 
+    /**
+     * Exceção lançada quando um tipo de usuário inválido é fornecido.
+     */
     public static class TipoUsuarioInvalidoException extends RuntimeException {
         public TipoUsuarioInvalidoException(String message) {
             super(message);

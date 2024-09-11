@@ -1,12 +1,11 @@
 package com.grupog.eventospoo.controller;
 
+import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.*;
 import com.grupog.eventospoo.utils.AlertUtils;
 import com.grupog.eventospoo.view.HomeView;
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -24,7 +23,9 @@ import java.util.Date;
 import java.util.Map;
 
 public class DashboardController {
+    // sabemos que tem muito codigo que era pra estar na view, perdao :(
 
+    // Componentes da interface gráfica
     @FXML
     private Text boasVindas;
 
@@ -58,28 +59,30 @@ public class DashboardController {
     @FXML
     private ListView<String> avaliacoesListView;
 
+    // Modelo de sistema
     private SystemModel systemModel;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws UsuarioException {
+        // Inicializa o modelo do sistema
         systemModel = SystemModel.getInstance();
         boasVindas.setText("Boas vindas " + systemModel.getUsuarioLogado().getNome() + "!");
         tipoUsuario.setText(systemModel.getUsuarioLogado().getTipoUsuario().toString());
 
         Usuario usuarioConectado = systemModel.getUsuarioLogado();
 
-        // Carregar tudo...
+        // Carrega dados iniciais
         carregarUsuarios();
         carregarEventos();
         carregarEventosInscritos();
         inicializarPorUsuario(usuarioConectado);
 
-        // Escuta de novos eventos
+        // Escuta mudanças no mapa de eventos
         systemModel.getEventos().addListener(new MapChangeListener<String, Evento>()  {
             @Override
             public void onChanged(Change<? extends String, ? extends Evento> change) {
                 if (change.wasAdded() || change.wasRemoved()) {
-                    // Handle added event
+                    // Atualiza a lista de eventos quando um novo evento é adicionado ou removido
                     System.out.println("Novo evento adicionado: " + change.getValueAdded().getNome());
                     carregarEventos();
                     carregarEventosInscritos();
@@ -87,12 +90,12 @@ public class DashboardController {
             }
         });
 
-        // Escutar mudanças caso evento tenha sido inscrito
+        // Escuta mudanças no mapa de eventos inscritos
         systemModel.getEventosInscritos().addListener(new MapChangeListener<String, Evento>() {
             @Override
             public void onChanged(Change<? extends String, ? extends Evento> change) {
                 if (change.wasAdded() || change.wasRemoved()) {
-                    // Atualizar a view
+                    // Atualiza a visualização dos eventos inscritos
                     carregarEventos();
                     carregarEventosInscritos();
                 }
@@ -101,21 +104,20 @@ public class DashboardController {
     }
 
     public void carregarUsuarios() {
-        // Map dos usuários do sistema
+        // Obtém o mapa de usuários do sistema
         Map<String, Usuario> usuarios = systemModel.getUsuarios();
 
-        // Deletar elementos existentes (se houver)
+        // Limpa a lista de usuários exibidos
         usersVBox.getChildren().clear();
 
         String usuarioConectadoNome = systemModel.getUsuarioLogado().getNome();
 
-        // Criar Label para cada usuário que existe no sistema, é o sistema de chat
+        // Cria uma label para cada usuário no sistema, exceto o usuário logado
         for (Map.Entry<String, Usuario> entry : usuarios.entrySet()) {
             String userName = entry.getKey();
 
-            // dar skip se for o proprio usuario
             if (userName.equals(usuarioConectadoNome)) {
-                continue;
+                continue; // Pular o usuário logado
             }
 
             Label userLabel = new Label(userName);
@@ -130,9 +132,10 @@ public class DashboardController {
     }
 
     private void carregarEventos() {
+        // Limpa os eventos exibidos
         eventosCard.getChildren().clear();
 
-        // Map dos eventos existentes
+        // Obtém o mapa de eventos do sistema
         Map<String, Evento> eventos = systemModel.getEventos();
 
         if (eventos == null || eventos.isEmpty()) {
@@ -141,7 +144,7 @@ public class DashboardController {
             return;
         }
 
-        // Criar uma card para cada evento existente
+        // Cria um container para cada evento
         for (Map.Entry<String, Evento> entry : eventos.entrySet()) {
             Evento evento = entry.getValue();
 
@@ -166,11 +169,12 @@ public class DashboardController {
         }
     }
 
-
     private Button getDetalhesEventoButton(Evento evento) {
+        // Cria um botão para visualizar detalhes do evento
         Button verMaisButao = new Button("Ver Detalhes");
 
         verMaisButao.setOnAction(e -> {
+            // Cria uma nova janela para exibir detalhes do evento
             Stage detailsStage = new Stage();
             detailsStage.setTitle("Detalhes do Evento");
 
@@ -195,6 +199,7 @@ public class DashboardController {
     }
 
     private Button getInscricaoButton(Evento evento, Stage detailsStage) {
+        // Cria um botão para inscrição/desinscrição no evento
         Button inscricaoButton = new Button();
 
         boolean isSubscribed = systemModel.getEventosInscritos().containsValue(evento);
@@ -202,14 +207,16 @@ public class DashboardController {
 
         inscricaoButton.setOnAction(inscricaoEvent -> {
             if (isSubscribed) {
+                // Desinscreve do evento
                 System.out.println("Desinscrevendo evento: " + evento.getNome());
                 systemModel.desinscrever(evento);
             } else {
+                // Inscreve no evento
                 System.out.println("Inscrevendo no evento: " + evento.getNome());
                 systemModel.inscrever(evento);
             }
 
-            // Fechar após a pessoa clicar para se inscrever ou desinscrever do evento
+            // Atualiza o status do botão e fecha a janela após a ação
             Platform.runLater(() -> {
                 boolean updatedSubscribedStatus = systemModel.getEventosInscritos().containsValue(evento);
                 inscricaoButton.setText(updatedSubscribedStatus ? "Desinscrever" : "Se inscrever");
@@ -220,11 +227,11 @@ public class DashboardController {
         return inscricaoButton;
     }
 
-
-    // Mesma coisa de carregar eventos, mas esse apenas para eventos inscritos pelo usuário
     private void carregarEventosInscritos() {
+        // Limpa os eventos inscritos exibidos
         eventosInscritosCard.getChildren().clear();
 
+        // Obtém o mapa de eventos inscritos do sistema
         Map<String, Evento> eventosInscritos = systemModel.getEventosInscritos();
 
         if (eventosInscritos.isEmpty()) {
@@ -235,6 +242,7 @@ public class DashboardController {
             return;
         }
 
+        // Cria um container para cada evento inscrito
         for (Map.Entry<String, Evento> entry : eventosInscritos.entrySet()) {
             Evento evento = entry.getValue();
 
@@ -259,16 +267,17 @@ public class DashboardController {
         eventosInscritosCard.setStyle("-fx-padding: 15");
     }
 
-
     public void inicializarPorUsuario(Usuario usuario) {
+        // Configura a interface com base no tipo de usuário
         switch (usuario.getTipoUsuario()) {
             case VISITANTE:
+                // Configuração para visitante (nenhuma específica aqui)
                 break;
             case ORGANIZADOR:
-                setupOrganizador();
+                setupOrganizador(); // Configuração para organizador
                 break;
             case AUTOR:
-                setupAutor();
+                setupAutor(); // Configuração para autor
                 break;
             default:
                 throw new IllegalArgumentException("Tipo de usuário desconhecido: " + usuario.getTipoUsuario());
@@ -276,15 +285,16 @@ public class DashboardController {
     }
 
     private void setupOrganizador() {
+        // Configura a aba do organizador
         Tab organizadorTab = new Tab("Organização");
 
         VBox organizadorLayout = new VBox(10);
         organizadorLayout.setPadding(new Insets(10));
 
-        // Adding Event Section
+        // Seção de adicionar evento
         Label addEventLabel = new Label("Adicionar Evento");
 
-        // Text fields for event details
+        // Campos para detalhes do evento
         TextField eventNameField = new TextField();
         eventNameField.setPromptText("Nome do Evento");
 
@@ -303,13 +313,14 @@ public class DashboardController {
         Button addEventButton = new Button("Adicionar Evento");
 
         addEventButton.setOnAction(e -> {
+            // Adiciona um novo evento ao sistema
             String eventName = eventNameField.getText();
             String eventLocation = eventLocationField.getText();
             String eventDate = eventDateField.getText();
             String eventTime = eventTimeField.getText();
             String eventDescription = eventDescriptionField.getText();
 
-            // Validation
+            // Validação dos campos
             if (eventName.isEmpty() || eventLocation.isEmpty() || eventDate.isEmpty() || eventTime.isEmpty() || eventDescription.isEmpty()) {
                 AlertUtils.showAlert(Alert.AlertType.WARNING, "Campos Obrigatórios", "Por favor, preencha todos os campos.");
                 return;
@@ -328,16 +339,17 @@ public class DashboardController {
 
             systemModel.addEvento(newEvent);
 
+            // Limpa os campos após adicionar o evento
             eventNameField.clear();
             eventLocationField.clear();
             eventDateField.clear();
             eventTimeField.clear();
             eventDescriptionField.clear();
-
         });
 
         VBox addEventForm = new VBox(5, addEventLabel, eventNameField, eventLocationField, eventDateField, eventTimeField, eventDescriptionField, addEventButton);
 
+        // Seção para remover evento
         Label removeEventLabel = new Label("Remover Evento");
 
         ListView<String> eventosListView = new ListView<>();
@@ -354,7 +366,7 @@ public class DashboardController {
             }
         });
 
-        // Escutar quando evento é adicionado ou removido
+        // Atualiza a lista de eventos quando eventos são adicionados ou removidos
         systemModel.getEventos().addListener((MapChangeListener<String, Evento>) change -> {
             eventosListView.getItems().clear();
             eventosListView.getItems().addAll(systemModel.getEventos().keySet());
@@ -365,40 +377,36 @@ public class DashboardController {
         organizadorLayout.getChildren().addAll(addEventForm, removeEventSection);
         organizadorTab.setContent(organizadorLayout);
 
-        // Add the "Organizador" tab to the tab pane
+        // Adiciona a aba do organizador ao painel de abas
         tab.getTabPane().getTabs().add(organizadorTab);
     }
 
     private void setupAutor() {
-        // Adicionar tab de Autor
+        // Adiciona uma aba para o autor
         tab.getTabPane().getTabs().add(new Tab("Autor"));
     }
 
     @FXML
     private void handleLogout() throws IOException {
+        // Realiza o logout e fecha a tela atual
         systemModel.logout();
 
-        // Pegar a tela
         Stage stage = (Stage) boasVindas.getScene().getWindow();
-
         stage.close();
 
-        Stage primaryStage = (Stage) boasVindas.getScene().getWindow();
-        primaryStage.close();
-
-        // Voltar para página inicial
+        // Abre a tela inicial
         Stage newStage = new Stage();
         new HomeView(newStage);
     }
 
     @FXML
     private void handleEnviarAvaliacao() {
-        // Get input values
+        // Obtém valores de entrada
         String nomeEvento = eventoAvaliadoField.getText();
         String notaText = notaField.getText();
         String comentario = comentarioField.getText();
 
-        // Validate input
+        // Valida a entrada
         if (nomeEvento.isEmpty() || notaText.isEmpty() || comentario.isEmpty()) {
             AlertUtils.showAlert("Por favor, preencha todos os campos.");
             return;
@@ -416,27 +424,27 @@ public class DashboardController {
             return;
         }
 
-        // Create a new Avaliacao object
+        // Cria um novo objeto Avaliacao
         Evento evento = systemModel.getEventos().get(nomeEvento);
 
-        // adicionar exception bro
         if (evento == null) {
             AlertUtils.showAlert("Evento inexistente, bro..");
             return;
         }
 
-        // Add the evaluation to the system (or associated event)
         Usuario usuarioConectado = systemModel.getUsuarioLogado();
         Avaliacao avaliacao = new Avaliacao(evento, nota, comentario, LocalDateTime.now(), usuarioConectado);
         systemModel.addAvaliacao(avaliacao);
 
+        // Adiciona a avaliação à lista e limpa os campos
         avaliacoesListView.getItems().add(formatAvaliacao(avaliacao));
         eventoAvaliadoField.clear();
         notaField.clear();
         comentarioField.clear();
     }
-    
+
     private String formatAvaliacao(Avaliacao avaliacao) {
+        // Formata a avaliação para exibição
         return String.format("Evento: %s\nNota: %d\nComentário: %s\nData: %s\nUsuário: %s",
                 avaliacao.getEvento().getNome(),
                 avaliacao.getNota(),

@@ -10,7 +10,7 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="591.0" prefWidth="1143.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.grupog.eventospoo.controller.HomeController">
     <VBox alignment="CENTER" layoutX="401.0" layoutY="164.0" prefHeight="264.0" prefWidth="341.0" style="-fx-spacing: 8px;">
         <children>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleLogin" prefHeight="24.0" prefWidth="160.0" style="-fx-background-color: #002147;" text="Entrar" textAlignment="JUSTIFY" textFill="WHITE">
+            <Button fx:id="butao" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleLogin" prefHeight="24.0" prefWidth="160.0" style="-fx-background-color: #002147;" text="Entrar" textAlignment="JUSTIFY" textFill="WHITE">
                 <font>
                     <Font size="16.0" />
                 </font>

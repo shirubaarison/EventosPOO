@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -25,7 +26,7 @@
       </Text>
       <MenuBar layoutY="1.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="27.0" prefWidth="1253.0">
         <menus>
-          <Menu mnemonicParsing="false" text="Conta">
+          <Menu mnemonicParsing="false" text="Menu">
             <items>
                <MenuItem mnemonicParsing="false" onAction="#handleLogout" text="Sair" />
             </items>
@@ -35,18 +36,18 @@
       </MenuBar>
       <TabPane layoutX="40.0" layoutY="110.0" prefHeight="519.0" prefWidth="910.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
-          <Tab fx:id="tab" text="Eventos">
+          <Tab text="Eventos">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="488.0" prefWidth="911.0">
                      <children>
                         <AnchorPane layoutX="-3.0" layoutY="6.0" prefHeight="458.0" prefWidth="916.0">
                            <children>
-                              <HBox fx:id="eventosCard" layoutX="16.0" layoutY="63.0" prefHeight="142.0" prefWidth="884.0">
+                              <HBox fx:id="eventosCard" layoutX="16.0" layoutY="63.0" prefHeight="162.0" prefWidth="885.0">
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="181.0" prefWidth="200.0" />
                                  </children>
                               </HBox>
-                              <Text layoutX="16.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Descubra eventos">
+                              <Text layoutX="16.0" layoutY="43.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Eventos disponíveis">
                                  <font>
                                     <Font size="20.0" />
                                  </font>
@@ -56,9 +57,9 @@
                                     <Font size="20.0" />
                                  </font>
                               </Text>
-                              <HBox layoutX="16.0" layoutY="276.0" prefHeight="142.0" prefWidth="884.0">
+                              <HBox layoutX="16.0" layoutY="276.0" prefHeight="172.0" prefWidth="889.0">
                                  <children>
-                                    <HBox fx:id="eventosInscritosCard" prefHeight="142.0" prefWidth="887.0" />
+                                    <HBox fx:id="eventosInscritosCard" prefHeight="171.0" prefWidth="885.0" />
                                  </children>
                               </HBox>
                            </children>
@@ -78,19 +79,19 @@
                                             <Font size="20.0" />
                                         </font>
                                     </Text>
-                                    <HBox spacing="10">
+                                    <HBox alignment="CENTER_LEFT" spacing="10">
                                         <Text text="Evento:" />
-                                        <TextField fx:id="eventoAvaliadoField" promptText="Nome do evento" />
+                                 <ComboBox fx:id="eventoAvaliadoField" prefHeight="24.0" prefWidth="320.0" />
                                     </HBox>
-                                    <HBox spacing="10">
+                                    <HBox alignment="CENTER_LEFT" spacing="10">
                                         <Text text="Nota (0-10):" />
                                         <TextField fx:id="notaField" promptText="Nota" />
                                     </HBox>
-                                    <HBox spacing="10">
+                                    <HBox alignment="CENTER" spacing="10">
                                         <Text text="Comentário:" />
                                         <TextField fx:id="comentarioField" prefHeight="24.0" prefWidth="775.0" promptText="Escreva seu comentário..." />
                                     </HBox>
-                                    <Button fx:id="submitAvaliacaoButton" onAction="#handleEnviarAvaliacao" text="Enviar Avaliação" />
+                                    <Button fx:id="butaoEnviarAvaliacao" onAction="#handleEnviarAvaliacao" text="Enviar Avaliação" />
                                 </children>
                             </VBox>
                             <VBox layoutX="10.0" layoutY="180.0" spacing="10">
@@ -162,9 +163,9 @@
             </Tab>
         </tabs>
       </TabPane>
-      <TitledPane animated="false" layoutX="974.0" layoutY="110.0" prefHeight="458.0" prefWidth="262.0" text="Chat">
+      <TitledPane animated="false" layoutX="974.0" layoutY="110.0" prefHeight="495.0" prefWidth="262.0" text="Chat">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="482.0" prefWidth="260.0">
                <children>
                   <VBox prefHeight="434.0" prefWidth="262.0">
                      <children>

@@ -4,12 +4,8 @@ import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.*;
 import com.grupog.eventospoo.utils.AlertUtils;
 import javafx.collections.MapChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,6 +20,9 @@ import java.util.Date;
 import java.util.Map;
 
 public class DashboardController {
+    @FXML
+    private Button butaoEnviarAvaliacao;
+
     @FXML
     private TextField eventDateFieldInput;
 
@@ -61,25 +60,19 @@ public class DashboardController {
     private HBox eventosInscritosCard;
 
     @FXML
-    private Tab tab;
-
-    @FXML
     private Menu tipoUsuario;
 
     @FXML
     private VBox usersVBox;
 
     @FXML
-    private TextField eventoAvaliadoField;
+    private ComboBox<String> eventoAvaliadoField;
 
     @FXML
     private TextField notaField;
 
     @FXML
     private TextField comentarioField;
-
-    @FXML
-    private Button submitAvaliacaoButton;
 
     @FXML
     private ListView<String> avaliacoesListView;
@@ -91,16 +84,22 @@ public class DashboardController {
     public void initialize() throws UsuarioException {
         // Inicializa o modelo do sistema
         systemModel = SystemModel.getInstance();
+
         boasVindas.setText("Boas vindas " + systemModel.getUsuarioLogado().getNome() + "!");
         tipoUsuario.setText(systemModel.getUsuarioLogado().getTipoUsuario().toString());
 
         Usuario usuarioConectado = systemModel.getUsuarioLogado();
 
-        // Carrega dados iniciais
+        // Carrega dados
         carregarUsuarios();
-        carregarEventos();
-        carregarEventosInscritos();
+        try {
+            carregarEventos();
+            carregarEventosInscritos();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         inicializarPorUsuario(usuarioConectado);
+        popularAvaliacaoComboBox();
 
         // Escuta mudanças no mapa de eventos
         systemModel.getEventos().addListener(new MapChangeListener<String, Evento>()  {
@@ -108,9 +107,12 @@ public class DashboardController {
             public void onChanged(Change<? extends String, ? extends Evento> change) {
                 if (change.wasAdded() || change.wasRemoved()) {
                     // Atualiza a lista de eventos quando um novo evento é adicionado ou removido
-                    System.out.println("Novo evento adicionado: " + change.getValueAdded().getNome());
-                    carregarEventos();
-                    carregarEventosInscritos();
+                    try {
+                        carregarEventos();
+                        carregarEventosInscritos();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         });
@@ -121,8 +123,13 @@ public class DashboardController {
             public void onChanged(Change<? extends String, ? extends Evento> change) {
                 if (change.wasAdded() || change.wasRemoved()) {
                     // Atualiza a visualização dos eventos inscritos
-                    carregarEventos();
-                    carregarEventosInscritos();
+                    try {
+                        carregarEventos();
+                        carregarEventosInscritos();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    popularAvaliacaoComboBox();
                 }
             }
         });
@@ -156,103 +163,58 @@ public class DashboardController {
         }
     }
 
-    private void carregarEventos() {
-        // Limpa os eventos exibidos
-        eventosCard.getChildren().clear();
-
-        // Obtém o mapa de eventos do sistema
+    private void carregarEventos() throws IOException {
         Map<String, Evento> eventos = systemModel.getEventos();
+        carregarEventosComuns(eventos, eventosCard, "Nenhum evento disponível.");
+    }
+
+    private void carregarEventosInscritos() throws IOException {
+        Map<String, Evento> eventosInscritos = systemModel.getEventosInscritos();
+        carregarEventosComuns(eventosInscritos, eventosInscritosCard, "Você não está inscrito em nenhum evento.");
+    }
+
+    private void carregarEventosComuns(Map<String, Evento> eventos, HBox container, String emptyMessage) throws IOException {
+        container.getChildren().clear();
 
         if (eventos == null || eventos.isEmpty()) {
-            Label noEventsLabel = new Label("Nenhum evento disponível.");
-            eventosCard.getChildren().add(noEventsLabel);
+            Label noEventsLabel = new Label(emptyMessage);
+            container.getChildren().add(noEventsLabel);
             return;
         }
 
-        // Cria um container para cada evento
-        for (Map.Entry<String, Evento> entry : eventos.entrySet()) {
-            Evento evento = entry.getValue();
+        // Carregar eventoCard para cada evento
+        for (Evento evento : eventos.values()) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/dashboard/EventoCard.fxml"));
+                VBox eventoCard = loader.load();
+                EventoCardController cardController = loader.getController();
+                cardController.setEvento(evento);
 
-            Label nomeEvento = new Label(evento.getNome());
-            Label localizacaoEvento = new Label("Local: " + evento.getLocalizacao().getNome());
-            Label horaEvento = new Label("Hora: " + evento.getHora());
-
-            Button verMaisButao = new Button("Ver detalhes");
-            verMaisButao.setOnAction(e -> showEventoDetails(evento));
-
-            VBox eventoContainer = new VBox();
-            eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
-            eventoContainer.setSpacing(15);
-
-            eventosCard.getChildren().add(eventoContainer);
+                container.getChildren().add(eventoCard);
         }
     }
 
-    // Carregar view dos detalhes do evento
-    private EventHandler<ActionEvent> showEventoDetails(Evento evento) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/dashboard/DetalhesEventoView.fxml"));
-            Parent root = loader.load();
+    private void popularAvaliacaoComboBox() {
+        eventoAvaliadoField.getItems().clear();
 
-            Scene detailEventoScene = new Scene(root);
-
-            Stage detailsStage = new Stage();
-            detailsStage.setScene(detailEventoScene);
-
-            detailsStage.initModality(javafx.stage.Modality.WINDOW_MODAL);
-
-            detailsStage.setTitle("Detalhes do Evento");
-
-            EventoDetailsController controller = loader.getController();
-            controller.setEvento(evento);
-
-            controller.setStage(detailsStage);
-
-            detailsStage.show();
-
-            // Aparecer com foco
-            detailsStage.toFront();
-            detailsStage.requestFocus();
-            detailsStage.setIconified(false);
-        } catch (UsuarioException | IOException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    private void carregarEventosInscritos() {
-        // Limpa os eventos inscritos exibidos
-        eventosInscritosCard.getChildren().clear();
-
-        // Obtém o mapa de eventos inscritos do sistema
         Map<String, Evento> eventosInscritos = systemModel.getEventosInscritos();
 
+        // Sem eventos, desabilite o combobox
         if (eventosInscritos.isEmpty()) {
-            Label noInscritosLabel = new Label("Você não está inscrito em nenhum evento.");
-            eventosInscritosCard.getChildren().add(noInscritosLabel);
+            eventoAvaliadoField.setDisable(true);
+            comentarioField.setDisable(true);
+            notaField.setDisable(true);
+            butaoEnviarAvaliacao.setDisable(true);
 
-            noInscritosLabel.setMaxWidth(300);
-            return;
+        } else {
+            for (String eventName : eventosInscritos.keySet()) {
+                eventoAvaliadoField.getItems().add(eventName);
+            }
+
+            eventoAvaliadoField.setDisable(false);
+            comentarioField.setDisable(false);
+            notaField.setDisable(false);
+            butaoEnviarAvaliacao.setDisable(false);
         }
-
-        // Cria um container para cada evento inscrito
-        for (Map.Entry<String, Evento> entry : eventosInscritos.entrySet()) {
-            Evento evento = entry.getValue();
-
-            Label nomeEvento = new Label(evento.getNome());
-            Label localizacaoEvento = new Label("Local: " + evento.getLocalizacao().getNome());
-            Label horaEvento = new Label("Hora: " + evento.getHora());
-            Button verMaisButao = new Button("Ver mais");
-            verMaisButao.setOnAction(e -> showEventoDetails(evento));
-
-            VBox eventoContainer = new VBox();
-            eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
-            eventoContainer.setSpacing(15);
-
-            eventosInscritosCard.getChildren().add(eventoContainer);
-        }
-
-        eventosInscritosCard.setStyle("-fx-padding: 15");
     }
 
     public void inicializarPorUsuario(Usuario usuario) {
@@ -274,7 +236,7 @@ public class DashboardController {
 
     private void setupOrganizador() {
         // Configura a aba do organizador
-        organizadorTab.setDisable(false);
+        organizadorTab.setDisable(false); // habilitar tab
 
         addEventButton.setOnAction(e -> {
             // Adiciona um novo evento ao sistema
@@ -332,8 +294,7 @@ public class DashboardController {
     }
 
     private void setupAutor() {
-        // Adiciona uma aba para o autor
-        tab.getTabPane().getTabs().add(new Tab("Autor"));
+        //
     }
 
     @FXML
@@ -345,13 +306,13 @@ public class DashboardController {
         stage.close();
 
         // Volta pra tela inicial
-        //
+        // implementar :)
     }
 
     @FXML
     private void handleEnviarAvaliacao() {
         // Obtém valores de entrada
-        String nomeEvento = eventoAvaliadoField.getText();
+        String nomeEvento = eventoAvaliadoField.getValue();
         String notaText = notaField.getText();
         String comentario = comentarioField.getText();
 
@@ -381,7 +342,7 @@ public class DashboardController {
             return;
         }
 
-        if (systemModel.getEventosInscritos().containsValue(evento)) {
+        if (!systemModel.getEventosInscritos().containsValue(evento)) {
             AlertUtils.showAlert("Você não está inscrito em " + nomeEvento);
         }
 
@@ -391,7 +352,7 @@ public class DashboardController {
 
         // Adiciona a avaliação à lista e limpa os campos
         avaliacoesListView.getItems().add(formatAvaliacao(avaliacao));
-        eventoAvaliadoField.clear();
+        eventoAvaliadoField.getSelectionModel().clearSelection();
         notaField.clear();
         comentarioField.clear();
     }

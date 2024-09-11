@@ -42,9 +42,9 @@ public class SystemModel {
      */
     public SystemModel() throws UsuarioException {
         // Inicializa com usuários padrão
-        addUsuario(new Usuario("amostradinho", "123.123.123-43", "UFC", PasswordUtils.hashPassword("123"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
-        addUsuario(new Usuario("caska de bala", "113.123.123-43", "UFBA", PasswordUtils.hashPassword("22"), "caska@gmail.com", TipoUsuario.ORGANIZADOR));
-        addUsuario(new Usuario("borabill", "123.123.123-43", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com", TipoUsuario.AUTOR));
+        addUsuario(new Usuario("amostradinho", "12312312343", "UFC", PasswordUtils.hashPassword("123"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
+        addUsuario(new Usuario("caska de bala", "11312312343", "UFBA", PasswordUtils.hashPassword("22"), "caska@gmail.com", TipoUsuario.ORGANIZADOR));
+        addUsuario(new Usuario("borabill", "12312312343", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com", TipoUsuario.AUTOR));
 
         // Inicializa com eventos padrão
         addEvento(new Evento("SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local("UFC Campus Russas", "Rua Universitária")));

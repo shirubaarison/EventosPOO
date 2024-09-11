@@ -184,13 +184,6 @@ public class DashboardController {
             eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
             eventoContainer.setSpacing(15);
 
-            eventoContainer.setStyle("-fx-border-color: #000000;" +
-                    "-fx-border-width: 2;" +
-                    "-fx-border-radius: 10;" +
-                    "-fx-background-radius: 10;" +
-                    "-fx-padding: 15;" +
-                    "-fx-background-color: #f0f0f0;");
-
             eventosCard.getChildren().add(eventoContainer);
         }
     }
@@ -217,7 +210,7 @@ public class DashboardController {
 
             detailsStage.show();
 
-            // Estava aparecendo sem foco
+            // Aparecer com foco
             detailsStage.toFront();
             detailsStage.requestFocus();
             detailsStage.setIconified(false);
@@ -250,17 +243,11 @@ public class DashboardController {
             Label localizacaoEvento = new Label("Local: " + evento.getLocalizacao().getNome());
             Label horaEvento = new Label("Hora: " + evento.getHora());
             Button verMaisButao = new Button("Ver mais");
-            verMaisButao.setOnAction(showEventoDetails(evento));
+            verMaisButao.setOnAction(e -> showEventoDetails(evento));
 
             VBox eventoContainer = new VBox();
             eventoContainer.getChildren().addAll(nomeEvento, localizacaoEvento, horaEvento, verMaisButao);
             eventoContainer.setSpacing(15);
-            eventoContainer.setStyle("-fx-border-color: #000000;" +
-                    "-fx-border-width: 2;" +
-                    "-fx-border-radius: 10;" +
-                    "-fx-background-radius: 10;" +
-                    "-fx-padding: 15;" +
-                    "-fx-background-color: #f0f0f0;");
 
             eventosInscritosCard.getChildren().add(eventoContainer);
         }
@@ -392,6 +379,10 @@ public class DashboardController {
         if (evento == null) {
             AlertUtils.showAlert("Evento inexistente, bro..");
             return;
+        }
+
+        if (systemModel.getEventosInscritos().containsValue(evento)) {
+            AlertUtils.showAlert("Você não está inscrito em " + nomeEvento);
         }
 
         Usuario usuarioConectado = systemModel.getUsuarioLogado();

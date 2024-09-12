@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.model;
 
+import com.grupog.eventospoo.exceptions.AtividadeException;
 import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.utils.PasswordUtils;
 import javafx.beans.property.ObjectProperty;
@@ -35,22 +36,8 @@ public class SystemModel {
     // Lista observável de avaliações
     private final ObservableList<Avaliacao> avaliacoes = FXCollections.observableArrayList();
 
-    /**
-     * Construtor da classe. Inicializa com alguns usuários e eventos padrão.
-     *
-     * @throws UsuarioException Se ocorrer algum erro ao criar usuários
-     */
-    public SystemModel() throws UsuarioException {
-        // Inicializa com usuários padrão
-        addUsuario(new Usuario("amostradinho", "12312312343", "UFC", PasswordUtils.hashPassword("123"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
-        addUsuario(new Usuario("caska de bala", "11312312343", "UFBA", PasswordUtils.hashPassword("22"), "caska@gmail.com", TipoUsuario.ORGANIZADOR));
-        addUsuario(new Usuario("borabill", "12312312343", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com", TipoUsuario.AUTOR));
+    public SystemModel() {
 
-        addUsuario(new Usuario("a", "12312312343", "UFC", PasswordUtils.hashPassword("1"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
-
-        // Inicializa com eventos padrão
-        addEvento(new Evento("SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local("UFC Campus Russas", "Rua Universitária")));
-        addEvento(new Evento("Torneio de Baladeira", "Valendo 2 milhões", new Date(), "01:00", new Local("Figuereido", "Figuereido")));
     }
 
     /**
@@ -59,7 +46,7 @@ public class SystemModel {
      * @return A instância única do SystemModel
      * @throws UsuarioException Se ocorrer algum erro ao inicializar o SystemModel
      */
-    public static SystemModel getInstance() throws UsuarioException {
+    public static SystemModel getInstance() {
         if (instance == null) {
             instance = new SystemModel();
         }
@@ -192,13 +179,14 @@ public class SystemModel {
      *
      * @param evento O evento no qual o usuário deseja se inscrever
      */
-    public void inscrever(Evento evento) {
+    public void inscrever(Evento evento) throws UsuarioException {
         if (evento == null) return; // Não faz nada se o evento for nulo
 
         Usuario usuarioConectado = getUsuarioLogado();
         if (usuarioConectado == null) return; // Não faz nada se nenhum usuário estiver logado
 
         usuarioConectado.inscreverNoEvento(evento);
+        evento.cadastrarUsuario(usuarioConectado);
         eventosInscritos.put(evento.getNome(), evento);
     }
 
@@ -207,13 +195,14 @@ public class SystemModel {
      *
      * @param evento O evento do qual o usuário deseja se desinscrever
      */
-    public void desinscrever(Evento evento) {
+    public void desinscrever(Evento evento) throws UsuarioException {
         if (evento == null) return;
 
         Usuario usuarioConectado = getUsuarioLogado();
         if (usuarioConectado == null) return;
 
         usuarioConectado.desinscreverDoEvento(evento);
+        evento.descadastrarUsuario(usuarioConectado);
         eventosInscritos.remove(evento.getNome());
     }
 
@@ -236,8 +225,6 @@ public class SystemModel {
                 usuario.desinscreverDoEvento(evento);
             }
         }
-
-        System.out.println("Evento " + evento.getNome() + " removido com sucesso.");
     }
 
     /**
@@ -288,5 +275,32 @@ public class SystemModel {
             }
         }
         return result;
+    }
+
+    /**
+     * Atualiza um evento existente no sistema.
+     *
+     * @param evento O evento a ser atualizado
+     * @throws IllegalArgumentException Se o evento for nulo ou não existir
+     */
+    public void updateEvento(Evento evento) {
+        if (evento == null) {
+            throw new IllegalArgumentException("Tentativa de atualizar evento nulo");
+        }
+
+        // Verifica se o evento já existe no sistema
+        if (!eventos.containsKey(evento.getNome())) {
+            throw new IllegalArgumentException("Evento não encontrado: " + evento.getNome());
+        }
+
+        // Atualiza o evento no mapa
+        eventos.put(evento.getNome(), evento);
+
+        // Atualiza a lista de eventos inscritos (se necessário)
+        for (Map.Entry<String, Evento> entry : eventosInscritos.entrySet()) {
+            if (entry.getValue().getNome().equals(evento.getNome())) {
+                eventosInscritos.put(evento.getNome(), evento);
+            }
+        }
     }
 }

@@ -18,7 +18,7 @@ public class LoginController {
     @FXML
     private PasswordField senha;
 
-    public void initialize() throws UsuarioException {
+    public void initialize() {
         // Pegar instancia do SystemModel
         systemModel = SystemModel.getInstance();
     }

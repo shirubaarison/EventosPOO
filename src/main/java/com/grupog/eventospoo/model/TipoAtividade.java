@@ -4,7 +4,7 @@ package com.grupog.eventospoo.model;
  * Enum que representa os diferentes tipos de atividades que podem ocorrer em um evento.
  */
 public enum TipoAtividade {
-    PALESTRA, VIDEOCONFERENCIA, MINICURSO, RODA, CULTURAL, EXPOSICAO;
+    PALESTRA, VIDEOCONFERENCIA, MINICURSO, RODA, CULTURAL, EXPOSICAO, MARATONA;
 
     /**
      * Converte uma string para o tipo de atividade correspondente no enum.

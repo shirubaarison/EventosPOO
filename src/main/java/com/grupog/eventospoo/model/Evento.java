@@ -1,7 +1,12 @@
 package com.grupog.eventospoo.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import com.grupog.eventospoo.exceptions.AtividadeException;
 import com.grupog.eventospoo.exceptions.EventoException;
+import com.grupog.eventospoo.exceptions.UsuarioException;
 
 /**
  * Representa um evento com informações como nome, descrição, data, hora e localização.
@@ -14,6 +19,8 @@ public class Evento {
     private Date data;
     private String hora;
     private Local localizacao;
+    private List<Usuario> usuariosCadastrados = new ArrayList<>();
+    private List<Atividade> atividades = new ArrayList<>();
 
     /**
      * Construtor para criar um novo evento com informações fornecidas.
@@ -31,6 +38,67 @@ public class Evento {
         setData(data);
         setHora(hora);
         setLocalizacao(localizacao);
+    }
+
+    /**
+     * Retorna uma atividade com base no título fornecido.
+     *
+     * @param titulo O título da atividade a ser procurada
+     * @return A atividade correspondente ao título, ou null se não encontrada
+     */
+    public Atividade getAtividadeByTitulo(String titulo) {
+        if (titulo == null || titulo.trim().isEmpty()) {
+            throw new IllegalArgumentException("Título não pode ser nulo ou vazio.");
+        }
+
+        for (Atividade atividade : atividades) {
+            if (atividade.getTitulo().equalsIgnoreCase(titulo)) {
+                return atividade;
+            }
+        }
+
+        // Retorna null se a atividade não for encontrada
+        return null;
+    }
+
+    public List<Atividade> getAtividades() {
+        return atividades;
+    }
+
+    public void adicionarAtividade(Atividade atividade) throws AtividadeException {
+        if (atividade == null) {
+            throw new AtividadeException("Atividade nula");
+        }
+
+        atividades.add(atividade);
+    }
+
+    public void removerAtividade(Atividade atividade) throws AtividadeException {
+        if (atividade == null) {
+            throw new AtividadeException("Atividade nula");
+        }
+
+        atividades.remove(atividade);
+    }
+
+    public List<Usuario> getUsuariosCadastrados() {
+        return usuariosCadastrados;
+    }
+
+    public void cadastrarUsuario(Usuario usuario) throws UsuarioException {
+        if (usuario == null) {
+            throw new UsuarioException("Usuário nulo");
+        }
+
+        this.usuariosCadastrados.add(usuario);
+    }
+
+    public void descadastrarUsuario(Usuario usuario) throws UsuarioException {
+        if (usuario == null) {
+            throw new UsuarioException("Usuário nulo");
+        }
+
+        this.usuariosCadastrados.remove(usuario);
     }
 
     /**

@@ -15,11 +15,44 @@ public class Atividade {
     private int id;
     private String titulo;
     private TipoAtividade tipo;
-    private final LocalDate horario = LocalDate.now();
+    private final LocalDate horario = LocalDate.now(); // Data de criação da atividade
     private Autor autor;
     private final List<Avaliacao> avaliacoes = new ArrayList<>();
     private boolean concluido = false;
     private boolean cancelado = false;
+
+    /**
+     * Construtor que cria uma atividade com título, tipo e autor.
+     *
+     * @param titulo O título da atividade
+     * @param tipo O tipo da atividade
+     * @param autor O autor responsável pela atividade
+     */
+    public Atividade(String titulo, TipoAtividade tipo, Autor autor) {
+        setTitulo(titulo);
+        setTipo(tipo);
+        setAutor(autor);
+    }
+
+    /**
+     * Construtor padrão vazio.
+     */
+    public Atividade() {
+
+    }
+
+    /**
+     * Construtor alternativo com título e horário.
+     * Este pode ser usado quando o horário da atividade é passado como string (para simplificação).
+     *
+     * @param titulo O título da atividade
+     * @param horarioString A hora no formato String
+     */
+    public Atividade(String titulo, String horarioString) {
+        setTitulo(titulo);
+        // Como o horário já está definido como LocalDate.now(), não é necessário setá-lo diretamente aqui.
+        // O horário string pode ser usado para outras finalidades, como exibição.
+    }
 
     /**
      * Retorna o identificador da atividade.
@@ -167,7 +200,7 @@ public class Atividade {
     /**
      * Retorna o horário de criação da atividade.
      *
-     * @return Data e hora de criação da atividade
+     * @return Data de criação da atividade
      */
     public LocalDate getHorario() {
         return horario;

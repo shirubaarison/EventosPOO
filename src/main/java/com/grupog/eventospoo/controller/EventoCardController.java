@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.controller;
 
+import com.grupog.eventospoo.exceptions.AtividadeException;
 import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.Evento;
 import javafx.fxml.FXML;
@@ -58,7 +59,7 @@ public class EventoCardController {
             detailsStage.toFront();
             detailsStage.requestFocus();
             detailsStage.setIconified(false);
-        } catch (UsuarioException | IOException e) {
+        } catch (UsuarioException | IOException | AtividadeException e) {
             throw new RuntimeException(e);
         }
     }

@@ -1,11 +1,14 @@
 package com.grupog.eventospoo.controller;
 
-import com.grupog.eventospoo.exceptions.UsuarioException;
+import com.grupog.eventospoo.exceptions.AtividadeException;
 import com.grupog.eventospoo.model.*;
 import com.grupog.eventospoo.utils.AlertUtils;
 import javafx.collections.MapChangeListener;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,6 +23,21 @@ import java.util.Date;
 import java.util.Map;
 
 public class DashboardController {
+    @FXML
+    private TextField atividadeHorarioField;
+
+    @FXML
+    private TextField atividadeDescricaoField;
+
+    @FXML
+    private Button addAtividadeButton;
+
+    @FXML
+    private ListView<String> atividadesListView;
+
+    @FXML
+    private Button removeAtividadeButton;
+
     @FXML
     private Button butaoEnviarAvaliacao;
 
@@ -51,6 +69,9 @@ public class DashboardController {
     private Tab organizadorTab;
 
     @FXML
+    private Tab atividadesTab;
+
+    @FXML
     private Text boasVindas;
 
     @FXML
@@ -66,7 +87,10 @@ public class DashboardController {
     private VBox usersVBox;
 
     @FXML
-    private ComboBox<String> eventoAvaliadoField;
+    private ComboBox<String> eventoAvaliadoComboBox;
+
+    @FXML
+    private ComboBox<String> atividadeEventoComboBox;
 
     @FXML
     private TextField notaField;
@@ -77,11 +101,12 @@ public class DashboardController {
     @FXML
     private ListView<String> avaliacoesListView;
 
+
     // Modelo de sistema
     private SystemModel systemModel;
 
     @FXML
-    public void initialize() throws UsuarioException {
+    public void initialize() {
         // Inicializa o modelo do sistema
         systemModel = SystemModel.getInstance();
 
@@ -99,39 +124,40 @@ public class DashboardController {
             throw new RuntimeException(e);
         }
         inicializarPorUsuario(usuarioConectado);
-        popularAvaliacaoComboBox();
+        popularEventoAvaliadoComboBox();
+        configurarListenersDeEventos();
+    }
 
+    private void configurarListenersDeEventos() {
         // Escuta mudanças no mapa de eventos
-        systemModel.getEventos().addListener(new MapChangeListener<String, Evento>()  {
-            @Override
-            public void onChanged(Change<? extends String, ? extends Evento> change) {
-                if (change.wasAdded() || change.wasRemoved()) {
-                    // Atualiza a lista de eventos quando um novo evento é adicionado ou removido
-                    try {
-                        carregarEventos();
-                        carregarEventosInscritos();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+        systemModel.getEventos().addListener((MapChangeListener<String, Evento>) change -> {
+            if (change.wasAdded() || change.wasRemoved()) {
+                // Atualiza a lista de eventos quando um novo evento é adicionado ou removido
+                try {
+                    carregarEventos();
+                    carregarEventosInscritos();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         });
 
         // Escuta mudanças no mapa de eventos inscritos
-        systemModel.getEventosInscritos().addListener(new MapChangeListener<String, Evento>() {
-            @Override
-            public void onChanged(Change<? extends String, ? extends Evento> change) {
-                if (change.wasAdded() || change.wasRemoved()) {
-                    // Atualiza a visualização dos eventos inscritos
-                    try {
-                        carregarEventos();
-                        carregarEventosInscritos();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    popularAvaliacaoComboBox();
+        systemModel.getEventosInscritos().addListener((MapChangeListener<String, Evento>) change -> {
+            if (change.wasAdded() || change.wasRemoved()) {
+                // Atualiza a visualização dos eventos inscritos
+                try {
+                    carregarEventos();
+                    carregarEventosInscritos();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+                popularEventoAvaliadoComboBox();
             }
+        });
+
+        atividadeEventoComboBox.getSelectionModel().selectedItemProperty().addListener((obs, _, newValue) -> {
+            atualizarListaDeAtividades(newValue);
         });
     }
 
@@ -174,6 +200,7 @@ public class DashboardController {
     }
 
     private void carregarEventosComuns(Map<String, Evento> eventos, HBox container, String emptyMessage) throws IOException {
+        atividadeEventoComboBox.getItems().clear();
         container.getChildren().clear();
 
         if (eventos == null || eventos.isEmpty()) {
@@ -189,28 +216,32 @@ public class DashboardController {
                 EventoCardController cardController = loader.getController();
                 cardController.setEvento(evento);
 
+                atividadeEventoComboBox.getItems().add(evento.getNome());
+
                 container.getChildren().add(eventoCard);
         }
     }
 
-    private void popularAvaliacaoComboBox() {
-        eventoAvaliadoField.getItems().clear();
+
+    private void popularEventoAvaliadoComboBox() {
+        eventoAvaliadoComboBox.getItems().clear();
 
         Map<String, Evento> eventosInscritos = systemModel.getEventosInscritos();
 
         // Sem eventos, desabilite o combobox
         if (eventosInscritos.isEmpty()) {
-            eventoAvaliadoField.setDisable(true);
+            eventoAvaliadoComboBox.setDisable(true);
             comentarioField.setDisable(true);
             notaField.setDisable(true);
             butaoEnviarAvaliacao.setDisable(true);
 
         } else {
             for (String eventName : eventosInscritos.keySet()) {
-                eventoAvaliadoField.getItems().add(eventName);
+                eventoAvaliadoComboBox.getItems().add(eventName);
             }
 
-            eventoAvaliadoField.setDisable(false);
+            // Habilitar os field ja que tem evento inscrito
+            eventoAvaliadoComboBox.setDisable(false);
             comentarioField.setDisable(false);
             notaField.setDisable(false);
             butaoEnviarAvaliacao.setDisable(false);
@@ -225,6 +256,7 @@ public class DashboardController {
                 break;
             case ORGANIZADOR:
                 setupOrganizador(); // Configuração para organizador
+                setupAutor();
                 break;
             case AUTOR:
                 setupAutor(); // Configuração para autor
@@ -252,6 +284,7 @@ public class DashboardController {
                 return;
             }
 
+            // Dar parse na data
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date parsedDate;
             try {
@@ -294,25 +327,30 @@ public class DashboardController {
     }
 
     private void setupAutor() {
-        //
+        atividadesTab.setDisable(false);
     }
 
     @FXML
     private void handleLogout() throws IOException {
-        // Realiza o logout e fecha a tela atual
         systemModel.logout();
 
-        Stage stage = (Stage) boasVindas.getScene().getWindow();
-        stage.close();
+        // Obtém o estágio atual (a janela onde o controlador está)
+        Stage currentStage = (Stage) boasVindas.getScene().getWindow();
 
-        // Volta pra tela inicial
-        // implementar :)
+        // Carrega a tela inicial
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/HomeView.fxml"));
+        Parent root = loader.load();
+
+        // Atualiza a cena do estágio atual
+        currentStage.setScene(new Scene(root));
+        currentStage.setTitle("Tela Inicial");
     }
+
 
     @FXML
     private void handleEnviarAvaliacao() {
         // Obtém valores de entrada
-        String nomeEvento = eventoAvaliadoField.getValue();
+        String nomeEvento = eventoAvaliadoComboBox.getValue();
         String notaText = notaField.getText();
         String comentario = comentarioField.getText();
 
@@ -352,7 +390,7 @@ public class DashboardController {
 
         // Adiciona a avaliação à lista e limpa os campos
         avaliacoesListView.getItems().add(formatAvaliacao(avaliacao));
-        eventoAvaliadoField.getSelectionModel().clearSelection();
+        eventoAvaliadoComboBox.getSelectionModel().clearSelection();
         notaField.clear();
         comentarioField.clear();
     }
@@ -365,5 +403,112 @@ public class DashboardController {
                 avaliacao.getComentario(),
                 avaliacao.getDateTime().toString(),
                 avaliacao.getUsuario().getNome());
+    }
+
+    // Método para adicionar uma atividade
+    public void handleAddAtividade(ActionEvent event) throws AtividadeException {
+        // Pegar o evento selecionado no ComboBox
+        String selectedEventName = atividadeEventoComboBox.getValue();
+
+        // Pegar valores dos campos de atividade
+        String atividadeHorario = atividadeHorarioField.getText();
+        String atividadeDescricao = atividadeDescricaoField.getText();
+
+        // Verificar se os campos estão preenchidos
+        if (selectedEventName == null || atividadeHorario.isEmpty() || atividadeDescricao.isEmpty()) {
+            AlertUtils.showAlert(Alert.AlertType.WARNING, "Campos Obrigatórios", "Por favor, preencha todos os campos.");
+            return;
+        }
+
+        // Validar o horário da atividade
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        Date parsedTime;
+        try {
+            parsedTime = timeFormat.parse(atividadeHorario);
+        } catch (ParseException ex) {
+            AlertUtils.showAlert(Alert.AlertType.ERROR, "Horário Inválido", "Formato de horário inválido. Use HH:mm.");
+            return;
+        }
+
+        // Obter o evento relacionado do sistema
+        Evento evento = systemModel.getEventos().get(selectedEventName);
+
+        if (evento == null) {
+            AlertUtils.showAlert("Evento não encontrado.");
+            return;
+        }
+
+        // Criar nova atividade
+        Atividade novaAtividade = new Atividade(atividadeDescricao, parsedTime.toString());
+
+        // Adicionar atividade ao evento
+        evento.adicionarAtividade(novaAtividade);
+
+        // Atualizar o sistema
+        systemModel.updateEvento(evento);
+
+        // Atualizar a lista de atividades no ListView
+        atividadesListView.getItems().add(novaAtividade.getTitulo());
+
+        // Limpar campos após adicionar
+        atividadeHorarioField.clear();
+        atividadeDescricaoField.clear();
+
+        AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Atividade adicionada com sucesso!");
+    }
+
+    // Método para remover uma atividade
+    public void handleRemoveAtividade(ActionEvent event) throws AtividadeException {
+        // Pegar a atividade selecionada
+        String selectedAtividade = (String) atividadesListView.getSelectionModel().getSelectedItem();
+
+        if (selectedAtividade == null) {
+            AlertUtils.showAlert(Alert.AlertType.WARNING, "Nenhuma Atividade Selecionada", "Selecione uma atividade para remover.");
+            return;
+        }
+
+        // Pegar o evento selecionado
+        String selectedEventName = atividadeEventoComboBox.getValue();
+
+        // Obter o evento relacionado do sistema
+        Evento evento = systemModel.getEventos().get(selectedEventName);
+
+        if (evento == null) {
+            AlertUtils.showAlert(Alert.AlertType.ERROR, "Erro", "Evento não encontrado.");
+            return;
+        }
+
+        // Remover a atividade do evento
+        evento.removerAtividade(evento.getAtividadeByTitulo(selectedAtividade));
+
+        // Atualizar o sistema
+        systemModel.updateEvento(evento);
+
+        // Remover atividade da interface
+        atividadesListView.getItems().remove(selectedAtividade);
+
+        AlertUtils.showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Atividade removida com sucesso!");
+    }
+
+    private void atualizarListaDeAtividades(String eventoNome) {
+        // Limpa a lista de atividades
+        atividadesListView.getItems().clear();
+
+        if (eventoNome == null || eventoNome.isEmpty()) {
+            return;
+        }
+
+        // Obtém o evento selecionado
+        Evento evento = systemModel.getEventos().get(eventoNome);
+
+        if (evento == null) {
+            AlertUtils.showAlert(Alert.AlertType.ERROR, "Erro", "Evento não encontrado.");
+            return;
+        }
+
+        // Adiciona as atividades do evento à lista
+        for (Atividade atividade : evento.getAtividades()) {
+            atividadesListView.getItems().add(atividade.getTitulo());
+        }
     }
 }

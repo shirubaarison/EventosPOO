@@ -81,7 +81,7 @@
                                     </Text>
                                     <HBox alignment="CENTER_LEFT" spacing="10">
                                         <Text text="Evento:" />
-                                 <ComboBox fx:id="eventoAvaliadoField" prefHeight="24.0" prefWidth="320.0" />
+                                 <ComboBox fx:id="eventoAvaliadoComboBox" prefHeight="24.0" prefWidth="320.0" />
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" spacing="10">
                                         <Text text="Nota (0-10):" />
@@ -110,9 +110,9 @@
             </Tab>
             <Tab fx:id="organizadorTab" disable="true" text="Organizador" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
                 <content>
-                    <VBox fx:id="organizadorLayout" spacing="10">
+                    <VBox spacing="10">
                         <!-- Seção de adicionar evento -->
-                        <VBox fx:id="addEventForm" spacing="5">
+                        <VBox spacing="5">
                             <Label text="Adicionar Evento" />
 
                             <TextField fx:id="eventNameFieldInput" promptText="Nome do Evento" />
@@ -125,7 +125,7 @@
                         </VBox>
 
                         <!-- Seção para remover evento -->
-                        <VBox fx:id="removeEventSection" spacing="5">
+                        <VBox spacing="5">
                             <Label text="Remover Evento" />
 
                             <ListView fx:id="eventosListView" />
@@ -135,31 +135,26 @@
                     </VBox>
                 </content>
             </Tab>
-            <Tab fx:id="organizadorTab1" disable="true" text="Atividades">
-               <content>
-                  <VBox fx:id="organizadorLayout1" spacing="10">
-                     <children>
-                        <VBox fx:id="addEventForm1" spacing="5">
-                           <children>
-                              <Label text="Adicionar Evento" />
-                              <TextField fx:id="eventNameFieldInput1" promptText="Nome do Evento" />
-                              <TextField fx:id="eventLocationFieldInput1" promptText="Local do Evento" />
-                              <TextField fx:id="eventDateFieldInput1" promptText="Data do Evento (dd/MM/yyyy)" />
-                              <TextField fx:id="eventTimeFieldInput1" promptText="Hora do Evento (HH:mm)" />
-                              <TextField fx:id="eventDescriptionFieldInput1" promptText="Descrição do Evento" />
-                              <Button fx:id="addEventButton1" text="Adicionar Evento" />
-                           </children>
+            <Tab fx:id="atividadesTab" disable="true" text="Atividades">
+                <content>
+                    <VBox spacing="10" alignment="CENTER">
+                        <!-- Seção para adicionar uma Atividade -->
+                        <VBox spacing="5">
+                            <Label text="Adicionar Atividade" />
+                            <ComboBox fx:id="atividadeEventoComboBox" prefHeight="24.0" prefWidth="248.0" promptText="Evento" />
+                            <TextField fx:id="atividadeHorarioField" promptText="Horário da Atividade (HH:mm)" />
+                            <TextField fx:id="atividadeDescricaoField" promptText="Descrição da Atividade" />
+                            <Button fx:id="addAtividadeButton" onAction="#handleAddAtividade" text="Adicionar Atividade" />
                         </VBox>
-                        <VBox fx:id="removeEventSection1" spacing="5">
-                           <children>
-                              <Label text="Remover Evento" />
-                              <ListView fx:id="eventosListView1" />
-                              <Button fx:id="removeEventButton1" text="Remover Evento" />
-                           </children>
+
+                        <!-- Seção para listar e remover Atividades -->
+                        <VBox spacing="5">
+                            <Label text="Remover Atividade" />
+                            <ListView fx:id="atividadesListView" prefHeight="200.0" prefWidth="400.0" />
+                            <Button fx:id="removeAtividadeButton" onAction="#handleRemoveAtividade" text="Remover Atividade" />
                         </VBox>
-                     </children>
-                  </VBox>
-               </content>
+                    </VBox>
+                </content>
             </Tab>
         </tabs>
       </TabPane>

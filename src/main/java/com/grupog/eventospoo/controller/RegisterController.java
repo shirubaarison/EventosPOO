@@ -1,5 +1,6 @@
 package com.grupog.eventospoo.controller;
 
+import com.grupog.eventospoo.exceptions.AtividadeException;
 import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.SystemModel;
 import com.grupog.eventospoo.model.TipoUsuario;
@@ -34,7 +35,7 @@ public class RegisterController {
     private ComboBox<TipoUsuario> tipoUsuario;
 
     @FXML
-    private void initialize() throws UsuarioException {
+    private void initialize() {
         // Inicializar tipos de usuário (menu dropdown)
         tipoUsuario.getItems().addAll(TipoUsuario.VISITANTE, TipoUsuario.ORGANIZADOR, TipoUsuario.AUTOR);
 

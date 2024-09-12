@@ -1,8 +1,6 @@
 package com.grupog.eventospoo.controller;
 
-import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.model.SystemModel;
-import com.grupog.eventospoo.model.Usuario;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +18,7 @@ public class HomeController {
     }
 
     // Método para inicialização
-    public void initialize() throws UsuarioException {
+    public void initialize() {
         // Pegar a instância do SystemModel
         SystemModel systemModel = SystemModel.getInstance();
 

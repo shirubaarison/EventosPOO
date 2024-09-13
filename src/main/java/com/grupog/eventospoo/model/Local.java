@@ -16,11 +16,9 @@ public class Local {
      * Inicializa o local com as informações fornecidas.
      *
      * @param nome     Nome do local
-     * @param endereco Endereço do local
      */
-    public Local(String nome, String endereco) {
+    public Local(String nome) {
         setNome(nome);
-        setEndereco(endereco);
     }
 
     /**

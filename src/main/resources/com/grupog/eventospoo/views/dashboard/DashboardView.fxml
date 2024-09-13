@@ -34,7 +34,7 @@
             <Menu fx:id="tipoUsuario" disable="true" mnemonicParsing="false" text="Tipo" />
         </menus>
       </MenuBar>
-      <TabPane layoutX="40.0" layoutY="110.0" prefHeight="519.0" prefWidth="910.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tabsPrincipal" layoutX="40.0" layoutY="110.0" prefHeight="519.0" prefWidth="910.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Eventos">
             <content>
@@ -68,94 +68,9 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Avaliações">
-                <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="488.0" prefWidth="911.0">
-                        <children>
-                            <VBox layoutX="10.0" layoutY="10.0" spacing="10">
-                                <children>
-                                    <Text text="Avaliar Evento">
-                                        <font>
-                                            <Font size="20.0" />
-                                        </font>
-                                    </Text>
-                                    <HBox alignment="CENTER_LEFT" spacing="10">
-                                        <Text text="Evento:" />
-                                 <ComboBox fx:id="eventoAvaliadoComboBox" prefHeight="24.0" prefWidth="320.0" />
-                                    </HBox>
-                                    <HBox alignment="CENTER_LEFT" spacing="10">
-                                        <Text text="Nota (0-10):" />
-                                        <TextField fx:id="notaField" promptText="Nota" />
-                                    </HBox>
-                                    <HBox alignment="CENTER" spacing="10">
-                                        <Text text="Comentário:" />
-                                        <TextField fx:id="comentarioField" prefHeight="24.0" prefWidth="775.0" promptText="Escreva seu comentário..." />
-                                    </HBox>
-                                    <Button fx:id="butaoEnviarAvaliacao" onAction="#handleEnviarAvaliacao" text="Enviar Avaliação" />
-                                </children>
-                            </VBox>
-                            <VBox layoutX="10.0" layoutY="180.0" spacing="10">
-                                <children>
-                                    <Text text="Avaliações Recentes">
-                                        <font>
-                                            <Font size="20.0" />
-                                        </font>
-                                    </Text>
-                                    <ListView fx:id="avaliacoesListView" prefHeight="250.0" prefWidth="900.0" />
-                                </children>
-                            </VBox>
-                        </children>
-                    </AnchorPane>
-                </content>
-            </Tab>
-            <Tab fx:id="organizadorTab" disable="true" text="Organizador" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
-                <content>
-                    <VBox spacing="10">
-                        <!-- Seção de adicionar evento -->
-                        <VBox spacing="5">
-                            <Label text="Adicionar Evento" />
-
-                            <TextField fx:id="eventNameFieldInput" promptText="Nome do Evento" />
-                            <TextField fx:id="eventLocationFieldInput" promptText="Local do Evento" />
-                            <TextField fx:id="eventDateFieldInput" promptText="Data do Evento (dd/MM/yyyy)" />
-                            <TextField fx:id="eventTimeFieldInput" promptText="Hora do Evento (HH:mm)" />
-                            <TextField fx:id="eventDescriptionFieldInput" promptText="Descrição do Evento" />
-
-                            <Button fx:id="addEventButton" text="Adicionar Evento" />
-                        </VBox>
-
-                        <!-- Seção para remover evento -->
-                        <VBox spacing="5">
-                            <Label text="Remover Evento" />
-
-                            <ListView fx:id="eventosListView" />
-
-                            <Button fx:id="removeEventButton" text="Remover Evento" />
-                        </VBox>
-                    </VBox>
-                </content>
-            </Tab>
-            <Tab fx:id="atividadesTab" disable="true" text="Atividades">
-                <content>
-                    <VBox spacing="10" alignment="CENTER">
-                        <!-- Seção para adicionar uma Atividade -->
-                        <VBox spacing="5">
-                            <Label text="Adicionar Atividade" />
-                            <ComboBox fx:id="atividadeEventoComboBox" prefHeight="24.0" prefWidth="248.0" promptText="Evento" />
-                            <TextField fx:id="atividadeHorarioField" promptText="Horário da Atividade (HH:mm)" />
-                            <TextField fx:id="atividadeDescricaoField" promptText="Descrição da Atividade" />
-                            <Button fx:id="addAtividadeButton" onAction="#handleAddAtividade" text="Adicionar Atividade" />
-                        </VBox>
-
-                        <!-- Seção para listar e remover Atividades -->
-                        <VBox spacing="5">
-                            <Label text="Remover Atividade" />
-                            <ListView fx:id="atividadesListView" prefHeight="200.0" prefWidth="400.0" />
-                            <Button fx:id="removeAtividadeButton" onAction="#handleRemoveAtividade" text="Remover Atividade" />
-                        </VBox>
-                    </VBox>
-                </content>
-            </Tab>
+            <Tab fx:id="avaliacoesTab" text="Avaliações" />
+            <Tab fx:id="organizadorTab" disable="true" text="Organizador" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" />
+            <Tab fx:id="atividadesTab" disable="true" text="Atividades" />
         </tabs>
       </TabPane>
       <TitledPane animated="false" layoutX="974.0" layoutY="110.0" prefHeight="495.0" prefWidth="262.0" text="Chat">

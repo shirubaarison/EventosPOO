@@ -12,6 +12,8 @@ module com.grupog.eventospoo {
     opens com.grupog.eventospoo.controller to javafx.fxml;
     exports com.grupog.eventospoo.model;
     opens com.grupog.eventospoo.model to javafx.fxml;
+    exports com.grupog.eventospoo.controller.dashboardtabs;
+    opens com.grupog.eventospoo.controller.dashboardtabs to javafx.fxml;
 
     exports com.grupog.eventospoo.exceptions;
 }

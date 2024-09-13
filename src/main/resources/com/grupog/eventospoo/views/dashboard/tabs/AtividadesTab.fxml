@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" spacing="10" alignment="CENTER" fx:controller="com.grupog.eventospoo.controller.dashboardtabs.AtividadeTabController">
+    <children>
+        <VBox spacing="5">
+            <Text text="Adicionar Atividade">
+                <font>
+                    <Font size="20.0" />
+                </font>
+            </Text>
+            <ComboBox fx:id="atividadeEventoComboBox" prefHeight="24.0" prefWidth="248.0" promptText="Evento" />
+            <TextField fx:id="atividadeHorarioField" promptText="Horário da Atividade (HH:mm)" />
+            <TextField fx:id="atividadeDescricaoField" promptText="Descrição da Atividade" />
+            <Button fx:id="addAtividadeButton" text="Adicionar Atividade" />
+        </VBox>
+        <VBox spacing="5">
+            <Text text="Remover Atividade">
+                <font>
+                    <Font size="20.0" />
+                </font>
+            </Text>
+            <ListView fx:id="atividadesListView" prefHeight="200.0" prefWidth="400.0" />
+            <Button fx:id="removeAtividadeButton" text="Remover Atividade" />
+        </VBox>
+    </children>
+</VBox>

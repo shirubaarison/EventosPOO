@@ -38,12 +38,12 @@
                 systemModel.addUsuario(new Usuario("borabill", "12312312343", "UFRN", PasswordUtils.hashPassword("boraBill"), "borabill@gmail.com", TipoUsuario.AUTOR));
                 systemModel.addUsuario(new Usuario("a", "12312312343", "UFC", PasswordUtils.hashPassword("1"), "amostradinho@gmail.com", TipoUsuario.VISITANTE));
 
-                Evento sescomp = new Evento("SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local("UFC Campus Russas", "Rua Universitária"));
+                Evento sescomp = new Evento("SESCOMP", "O maior evento de tecnologia do vale do Jaguaribe", new Date(), "00:00", new Local("UFC Campus Russas"));
                 sescomp.adicionarAtividade(new Atividade("Maratona de programacao", TipoAtividade.MARATONA, new Autor("Amostradinho")));
 
                 systemModel.addEvento(sescomp);
 
-                systemModel.addEvento(new Evento("Torneio de Baladeira", "Valendo 2 milhões", new Date(), "01:00", new Local("Figuereido", "Figuereido")));
+                systemModel.addEvento(new Evento("Torneio de Baladeira", "Valendo 2 milhões", new Date(), "01:00", new Local("Figuereido")));
 
                 stage.show();
             }

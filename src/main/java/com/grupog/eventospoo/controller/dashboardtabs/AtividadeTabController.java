@@ -3,6 +3,7 @@ package com.grupog.eventospoo.controller.dashboardtabs;
 import com.grupog.eventospoo.exceptions.AtividadeException;
 import com.grupog.eventospoo.model.*;
 import com.grupog.eventospoo.utils.AlertUtils;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -71,6 +72,12 @@ public class AtividadeTabController {
 
         atividadeEventoComboBox.getSelectionModel().selectedItemProperty().addListener((obs, _, novaAtividade) -> {
             atualizarListaDeAtividades(novaAtividade);
+        });
+
+        systemModel.getEventos().addListener((MapChangeListener<String, Evento>) change -> {
+            if (change.wasAdded() || change.wasRemoved()) {
+                popularEventoComboBox();
+            }
         });
     }
 

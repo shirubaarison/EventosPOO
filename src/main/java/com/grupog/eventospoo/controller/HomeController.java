@@ -6,23 +6,24 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class HomeController {
-    private Stage primaryStage;
+    @FXML
+    private Button butao;
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
+    private Stage primaryStage;
 
     // Método para inicialização
     public void initialize() {
         // Pegar a instância do SystemModel
         SystemModel systemModel = SystemModel.getInstance();
 
-        // Escutar caso tenha o usuário logou e se sim, trocar para tela de Dashboard
+        // Escutar caso o usuário tenha logado e se sim, trocar para tela de Dashboard
         systemModel.usuarioLogadoProperty().addListener((_, _, novoUsuarioLogado) -> {
             if (novoUsuarioLogado != null) {
                 try {
@@ -31,10 +32,11 @@ public class HomeController {
                     throw new RuntimeException(e);
                 }
             }
-            else {
-                primaryStage.close();
-            }
         });
+    }
+
+    public void setPrimaryStage(Stage stage) {
+        this.primaryStage = stage;
     }
 
     @FXML
@@ -46,7 +48,6 @@ public class HomeController {
         Scene loginScene = new Scene(root);
 
         Stage stage = new Stage();
-        stage.initOwner(primaryStage);
         stage.setTitle("Login");
         stage.setScene(loginScene);
 
@@ -64,7 +65,6 @@ public class HomeController {
         Scene loginScene = new Scene(root);
 
         Stage stage = new Stage();
-        stage.initOwner(primaryStage);
         stage.setTitle("Login");
         stage.setScene(loginScene);
 
@@ -73,8 +73,7 @@ public class HomeController {
         stage.show();
     }
 
-
-    // Troca a tela pro dashboard após usuário ter logado
+    // Troca a tela pro dashboard após o usuário ter logado
     private void showDashboard() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/dashboard/DashboardView.fxml"));
 
@@ -83,13 +82,17 @@ public class HomeController {
 
         Scene dashboardScene = new Scene(root);
 
-        // Configurar e exibir a nova tela
-        this.primaryStage.setScene(dashboardScene);
+        if (primaryStage != null) {
+            primaryStage.setScene(dashboardScene);
+            primaryStage.setTitle("Dashboard");
+            primaryStage.show();
+        }
     }
 
     // Sair
     @FXML
     private void handleExit() {
-        primaryStage.close();
+        Stage currentStage = (Stage) butao.getScene().getWindow();
+        currentStage.close();
     }
 }

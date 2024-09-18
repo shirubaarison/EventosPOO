@@ -1,6 +1,5 @@
 package com.grupog.eventospoo.model;
 
-import com.grupog.eventospoo.exceptions.AtividadeException;
 import com.grupog.eventospoo.exceptions.UsuarioException;
 import com.grupog.eventospoo.utils.PasswordUtils;
 import javafx.beans.property.ObjectProperty;
@@ -9,7 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -141,7 +139,6 @@ public class SystemModel {
      */
     public void logout() {
         setUsuarioLogado(null);
-
         eventosInscritos.clear();
     }
 

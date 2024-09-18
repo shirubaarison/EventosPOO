@@ -41,6 +41,16 @@ public class AvaliacaoTabController {
                 popularEventoAvaliadoComboBox();
             }
         });
+
+        popularAvaliacoesListView();
+    }
+
+    private void popularAvaliacoesListView() {
+        avaliacoesListView.getItems().clear();
+
+        for (Avaliacao avaliacao : systemModel.getAvaliacoes()) {
+            avaliacoesListView.getItems().add(formatAvaliacao(avaliacao));
+        }
     }
 
     private void setupListeners() {

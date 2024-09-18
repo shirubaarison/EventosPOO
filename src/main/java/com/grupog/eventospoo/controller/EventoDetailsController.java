@@ -77,9 +77,6 @@ public class EventoDetailsController {
         stage.close();
     }
 
-    /**
-     * Initialize the list of Atividades for the current Evento.
-     */
     private void initializeAtividades() {
         if (evento != null && evento.getAtividades() != null) {
             atividadesListView.getItems().clear();

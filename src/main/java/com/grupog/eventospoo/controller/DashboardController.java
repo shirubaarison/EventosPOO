@@ -210,14 +210,7 @@ public class DashboardController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/grupog/eventospoo/views/HomeView.fxml"));
         Parent root = loader.load();
 
-        // Atualiza a cena do estágio atual
         currentStage.setScene(new Scene(root));
         currentStage.setTitle("Tela Inicial");
     }
-
-
-
-
-
-
 }
